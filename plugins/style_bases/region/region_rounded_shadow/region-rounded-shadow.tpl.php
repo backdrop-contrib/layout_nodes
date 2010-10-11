@@ -9,7 +9,7 @@
  * - $classes: The classes that must be applied to the top divs.
  */
 ?>
-<div class="rounded-shadow <?php print $classes ?>">
+<div class="rounded-shadow <?php print $class ?>">
   <div class="rounded-shadow-background">
     <div class="rounded-shadow-wrap-corner">
       <div class="rounded-shadow-top-edge">
@@ -17,7 +17,7 @@
         <div class="rounded-shadow-right"></div>
       </div>
       <div class="rounded-shadow-left-edge">
-        <div class="rounded-shadow-right-edge clear-block">
+        <div class="rounded-shadow-right-edge clearfix">
           <?php print $content; ?>
         </div>
       </div>

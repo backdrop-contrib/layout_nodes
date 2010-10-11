@@ -6,7 +6,7 @@ $plugin = array(
   'access' => 'administer panels layouts',
 
   'menu' => array(
-    'menu prefix' => 'admin/build/panels',
+    'menu prefix' => 'admin/structure/panels',
     'menu item' => 'layouts',
     'menu title' => 'Layouts',
     'menu description' => 'Add, edit or delete custom content layouts.',
@@ -17,9 +17,6 @@ $plugin = array(
   'title plural' => t('layouts'),
   'title plural proper' => t('Layouts'),
 
-  'handler' => array(
-    'class' => 'panels_layouts_ui',
-    'parent' => 'ctools_export_ui',
-  ),
+  'class' => 'panels_layouts_ui',
 );
 
