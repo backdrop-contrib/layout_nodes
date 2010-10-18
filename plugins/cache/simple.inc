@@ -118,7 +118,7 @@ function panels_simple_cache_settings_form($conf, $display, $pid) {
 
   $form['granularity'] = array(
     '#title' => t('Granularity'),
-    '#type' => t('select'),
+    '#type' => 'select',
     '#options' => array(
       'args' => t('Arguments'),
       'context' => t('Context'),

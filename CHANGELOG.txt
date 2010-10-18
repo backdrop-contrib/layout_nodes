@@ -1,2 +1,4 @@
 Panels 7.x-dev
 ==============
+
+#920266 by dereine: Typo in cache.inc caused wsods in rare circumstances.
