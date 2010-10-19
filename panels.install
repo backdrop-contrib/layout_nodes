@@ -76,6 +76,7 @@ function panels_requirements_runtime() {
 
     $requirements['panels_legacy'] = array(
       'title' => $t('Panels operating in Legacy mode'),
+      'value' => NULL,
       'severity' => REQUIREMENT_WARNING,
       'description' => $description,
     );
