@@ -17,7 +17,7 @@ Drupal.PanelsIPE = {
         }
         return false;
       });
-  },
+  }
 }
 
 // A ready function should be sufficient for this, at least for now
