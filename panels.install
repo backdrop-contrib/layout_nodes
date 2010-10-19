@@ -1482,6 +1482,13 @@ function panels_update_6309() {
  */
 function panels_update_6310() {
   $ret = array();
+  // load the module files, if possible
+  if (!defined('PANELS_REQUIRED_CTOOLS_API')) {
+    include_once drupal_get_path('module', 'panels') . '/panels.module';
+  }
+  if (!defined('CTOOLS_API_VERSION')) {
+    include_once drupal_get_path('module', 'ctools') . '/ctools.module';
+  }
   // Safety: go away if CTools is not at an appropriate version.
   if (!module_invoke('ctools', 'api_version', PANELS_REQUIRED_CTOOLS_API)) {
     $ret['#abort'] = array('success' => FALSE, 'query' => t('Panels cannot be updated because CTools 1.7 (API v1.7.2) is required. Please update CTools and then try update.php again.'));
