@@ -6,3 +6,4 @@ Panels 7.x-dev
 #917614 by jskulski: IPE broken in IE.
 #906520: Improve CSS for rounded shadow boxes on IE7.
 #932632 by mikeytown2: Fix notice in .install file.
+#927840: Add clear-block to dashboard HTML to ensure themes do not do weird things to it.
