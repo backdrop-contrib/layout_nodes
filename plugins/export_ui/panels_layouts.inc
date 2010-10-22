@@ -17,6 +17,8 @@ $plugin = array(
   'title plural' => t('layouts'),
   'title plural proper' => t('Layouts'),
 
-  'class' => 'panels_layouts_ui',
+  'handler' => array(
+    'class' => 'panels_layouts_ui',
+  ),
 );
 

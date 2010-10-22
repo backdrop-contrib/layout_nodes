@@ -12,7 +12,7 @@ class panels_layouts_ui extends ctools_export_ui {
     }
 
     // Change the item to a tab on the Panels page.
-    $this->plugin['menu']['items']['list callback']['type'] = MENU_LOCAL_ACTION;
+    $this->plugin['menu']['items']['list callback']['type'] = MENU_LOCAL_TASK;
 
     // Establish a base for adding plugins
     $base = $this->plugin['menu']['items']['add'];
@@ -112,7 +112,7 @@ class panels_layouts_ui extends ctools_export_ui {
     $form_state['renderer'] = panels_get_renderer_handler('editor', $cache->display);
     $form_state['renderer']->cache = &$cache;
 
-    $form = array_merge($form, panels_edit_display_form($form_state));
+    $form = panels_edit_display_form($form, $form_state);
     // Make sure the theme will work since our form id is different.
     $form['#theme'] = 'panels_edit_display_form';
 
