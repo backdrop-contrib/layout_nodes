@@ -93,7 +93,7 @@ class panels_renderer_editor extends panels_renderer_standard {
     return $output;
   }
 
-  function render_pane($pane) {
+  function render_pane(&$pane) {
     // Pass through to normal rendering if not in admin mode.
     if (!$this->admin) {
       return parent::render_pane($pane);

@@ -59,7 +59,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
    *
    * @param $pane
    */
-  function render_pane($pane) {
+  function render_pane(&$pane) {
     $output = parent::render_pane($pane);
     if (empty($output)) {
       return;
