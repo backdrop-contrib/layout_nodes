@@ -10,3 +10,4 @@ Panels 7.x-dev
 #869766: Fix occasional problem with flexible layout pushing the entire layout to the left in certain fixed-width only configurations.
 #949310: E_STRICT violation on declaration of render_pane() method of display renderers.
 #940002: Custom style modal was broken.
+#953484: Panes were not properly using classes array.
