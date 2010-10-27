@@ -11,3 +11,4 @@ Panels 7.x-dev
 #949310: E_STRICT violation on declaration of render_pane() method of display renderers.
 #940002: Custom style modal was broken.
 #953484: Panes were not properly using classes array.
+#941532: panel nodes had some serious problems do to hook_node_*.
