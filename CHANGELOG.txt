@@ -13,3 +13,4 @@ Panels 7.x-dev
 #953484: Panes were not properly using classes array.
 #941532: panel nodes had some serious problems do to hook_node_*.
 #954324: Mini panels failed during uninstall.
+#827628: "Add content" dialog could lose content with the same title as other content.
