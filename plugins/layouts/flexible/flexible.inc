@@ -377,7 +377,7 @@ function theme_panels_flexible($vars) {
     // because the display does not truly exist, so we'll stick it in the
     // head tag. We also do this if we've been told we're in the layout
     // editor so that it always gets fresh CSS.
-    drupal_add_css($css, 'inline');
+    drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
   }
 
   // Also store the CSS on the display in case the live preview or something
@@ -418,7 +418,7 @@ function theme_panels_flexible_admin($vars) {
   $css = panels_flexible_render_css($renderer);
 
   // For the administrative view, add CSS directly to head.
-  drupal_add_css($css, 'inline');
+  drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
 
   if (empty($display->editing_layout)) {
     $output = '<input type="submit" id="panels-flexible-toggle-layout" class="form-submit" value ="' .
