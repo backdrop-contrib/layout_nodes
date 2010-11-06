@@ -20,6 +20,6 @@ $plugin = array(
  * @ingroup themeable
  */
 function theme_panels_naked_style_render_pane($vars) {
-  return $vars['content']->content;
+  return render($vars['content']->content);
 }
 
