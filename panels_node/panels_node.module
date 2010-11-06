@@ -145,7 +145,7 @@ function panels_node_node_info() {
 /**
  * Implementation of hook_access().
  */
-function panels_node_node_access($op, $node, $account) {
+function panels_node_node_access($node, $op, $account) {
   if ($op == 'create' && $node != 'panel') {
     return NODE_ACCESS_IGNORE;
   }
