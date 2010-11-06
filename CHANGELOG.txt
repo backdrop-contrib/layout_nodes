@@ -15,3 +15,4 @@ Panels 7.x-dev
 #954324: Mini panels failed during uninstall.
 #827628: "Add content" dialog could lose content with the same title as other content.
 Fix the naked style to support content that needs to be rendered.
+#958072: Fix panels_node_node_access to not throw warnings on menu access tests.
