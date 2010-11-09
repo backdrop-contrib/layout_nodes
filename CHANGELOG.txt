@@ -16,3 +16,4 @@ Panels 7.x-dev
 #827628: "Add content" dialog could lose content with the same title as other content.
 Fix the naked style to support content that needs to be rendered.
 #958072: Fix panels_node_node_access to not throw warnings on menu access tests.
+#965286: Panel node update was trying to use db_insert() instead of db_update().

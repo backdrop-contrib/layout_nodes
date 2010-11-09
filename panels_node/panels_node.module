@@ -307,7 +307,7 @@ function panels_node_hook_delete(&$node) {
  * Implementation of hook_update().
  */
 function panels_node_hook_update($node) {
-  db_insert('panels_node')
+  db_update('panels_node')
     ->condition('nid', $node->nid)
     ->fields(array(
       'css_id' => $node->panels_node['css_id'],
