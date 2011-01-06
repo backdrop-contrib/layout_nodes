@@ -127,7 +127,7 @@ class panels_cache_object {
    * When constructed, take a snapshot of our existing out of band data.
    */
   function panels_cache_object() {
-    $this->head = drupal_set_html_head();
+    $this->head = drupal_add_html_head();
     $this->css = drupal_add_css();
     $this->tokens = ctools_set_page_token();
 
@@ -159,7 +159,7 @@ class panels_cache_object {
     $this->ready = TRUE;
 
     // Simple replacement for head
-    $this->head = str_replace($this->head, '', drupal_set_html_head());
+    $this->head = str_replace($this->head, '', drupal_add_html_head());
 
     // Slightly less simple for CSS:
     $css = drupal_add_css();
@@ -222,7 +222,7 @@ class panels_cache_object {
    */
   function restore() {
     if (!empty($this->head)) {
-      drupal_set_html_head($this->head);
+      drupal_add_html_head($this->head);
     }
     if (!empty($this->css)) {
       foreach ($this->css as $args) {
