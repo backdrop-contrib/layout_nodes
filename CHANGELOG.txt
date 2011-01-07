@@ -22,3 +22,4 @@ Fix the naked style to support content that needs to be rendered.
 #980696 by das-peter: Update calls to drupal_set_html_head() to D7.
 #961662 by Nick Lewis: Account for pager info in simple caching.
 #980870 by das-peter: CSS handling during caching broken.
+#970076: Remove old hook_update functions.
