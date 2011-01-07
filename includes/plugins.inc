@@ -166,13 +166,9 @@ class panels_cache_object {
     $start = $this->css;
     $this->css = array();
 
-    foreach ($css as $media => $medias) {
-      foreach ($medias as $type => $types) {
-        foreach ($types as $path => $preprocess) {
-          if (!isset($start[$media][$type][$path])) {
-            $this->css[] = array($path, $type, $media, $preprocess);
-          }
-        }
+    foreach ($css as $name => $data) {
+      if (!isset($start[$name])) {
+        $this->css[$name] = array($data['data'], $data['type'], $data['media'], $data['preprocess']);
       }
     }
 
