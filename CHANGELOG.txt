@@ -23,3 +23,4 @@ Fix the naked style to support content that needs to be rendered.
 #961662 by Nick Lewis: Account for pager info in simple caching.
 #980870 by das-peter: CSS handling during caching broken.
 #970076: Remove old hook_update functions.
+#978768 by linclark: Fix notice with panel fields.
