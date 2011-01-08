@@ -220,9 +220,7 @@ Drupal.Panels.Draggable = {
 
         val += this.id.replace(draggable.draggableId, '');
       });
-      // Note: _ is replaced with - because Drupal automatically does this
-      // with form ids.
-      var region = this.id.replace(/_/g, '-').replace('panel-pane-', '');
+      var region = this.id.replace('panel-pane-', '');
       $('input[name="panel[pane][' +  region + ']"]').val(val);
     });
     return false;
