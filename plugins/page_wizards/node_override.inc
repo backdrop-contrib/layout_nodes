@@ -72,7 +72,7 @@ function panels_node_override_start($form_info, $step, &$form_state) {
  * First page of our page creator wizard.
  */
 function panels_node_override_basic($form, &$form_state) {
-  $types = node_get_types();
+
   $form_state['types'] = $types;
 
   $already_done = array();
@@ -102,17 +102,12 @@ function panels_node_override_basic($form, &$form_state) {
     );
   }
 
-  $options = array();
-  foreach ($types as $name => $type) {
-    if (empty($already_done[$name])) {
-      $options[$name] = $type->name;
-    }
-  }
+
 
   $form['type'] = array(
     '#type' => 'select',
     '#title' => t('Node type'),
-    '#options' => $options,
+    '#options' => array_map('check_plain', node_type_get_names()),
     '#default_value' => $form_state['cache']->type,
   );
 

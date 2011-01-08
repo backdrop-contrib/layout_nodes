@@ -26,3 +26,4 @@ Fix the naked style to support content that needs to be rendered.
 #978768 by linclark: Fix notice with panel fields.
 #977296: Regions with _ such as with two column bricks would not save content.
 #987902: Fix flexible layout splitter resize brokenness.
+#967734 by das-peter and intoxination: Upgrade node_get_types() in wizard.
