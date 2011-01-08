@@ -1378,7 +1378,11 @@ function panels_ajax_flexible_edit_add($handler, $id, $location = 'left') {
 
     if (!empty($form_state['sibling'])) {
       $sibling_width = '#panels-dnd-main .' . $renderer->base[$item['type']] . '-' . $form_state['sibling'] . '-width';
-      $output[] = ajax_command_html($sibling_width, $settings['items'][$form_state['sibling']]['width']);
+      $output[] = array(
+        'command' => 'flexible_set_width',
+        'selector' => $sibling_width,
+        'width' => $settings['items'][$form_state['sibling']]['width'],
+      );
     }
     foreach ($css as $selector => $data) {
       $output[] = ajax_command_css($selector, $data);
