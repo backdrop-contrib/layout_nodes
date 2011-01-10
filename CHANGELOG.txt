@@ -28,3 +28,4 @@ Fix the naked style to support content that needs to be rendered.
 #987902: Fix flexible layout splitter resize brokenness.
 #967734 by das-peter and intoxination: Upgrade node_get_types() in wizard.
 #1020824: Finish fixing node template page wizard.
+Fix landing page wizard.
