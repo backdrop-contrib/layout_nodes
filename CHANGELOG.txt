@@ -1,5 +1,7 @@
-Panels 7.x-dev
-==============
+CHANGELOG for Panels 3.0 for Drupal 7
+
+Panels 7.x-3.0-alpha1 (10-Jan-2011)
+=====================
 
 #920266 by dereine: Typo in cache.inc caused wsods in rare circumstances.
 #879482 by mvc: Ensure Panels and CTools module files are loaded during update. Apparently could cause WSOD if not.
