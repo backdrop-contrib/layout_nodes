@@ -1,4 +1,7 @@
 CHANGELOG for Panels 3.0 for Drupal 7
+Panels 7.x-3.0-dev
+==================
+#1025716: Panels fields broken in last update.
 
 Panels 7.x-3.0-alpha2 (10-Jan-2011)
 =====================
