@@ -2,6 +2,7 @@ CHANGELOG for Panels 3.0 for Drupal 7
 Panels 7.x-3.0-dev
 ==================
 #1025716: Panels fields broken in last update.
+#1056464 by EclipseGc: Fix broken delete statement in mini panel delete.
 
 Panels 7.x-3.0-alpha2 (10-Jan-2011)
 =====================
