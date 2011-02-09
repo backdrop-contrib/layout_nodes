@@ -3,6 +3,7 @@ Panels 7.x-3.0-dev
 ==================
 #1025716: Panels fields broken in last update.
 #1056464 by EclipseGc: Fix broken delete statement in mini panel delete.
+#954324 by EclipseGc: Fix broken delete statement in mini panel uninstall.
 
 Panels 7.x-3.0-alpha2 (10-Jan-2011)
 =====================

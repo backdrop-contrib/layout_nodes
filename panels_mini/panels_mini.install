@@ -117,7 +117,7 @@ function panels_mini_uninstall() {
 
   if ($deltas) {
     // Delete all configured blocks.
-    db_delete('blocks')
+    db_delete('block')
       ->condition('module', 'panels_mini')
       ->condition('delta', $deltas)
       ->execute();
