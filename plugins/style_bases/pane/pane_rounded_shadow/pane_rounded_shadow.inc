@@ -60,7 +60,7 @@ $plugin = array(
 );
 
 function template_preprocess_pane_rounded_shadow(&$vars) {
-  $vars['classes'] = $vars['content']->css_class;
+  $vars['classes_array'][] = $vars['content']->css_class;
   $vars['content']->css_class = '';
 
   $vars['output'] = theme('panels_pane', $vars);
