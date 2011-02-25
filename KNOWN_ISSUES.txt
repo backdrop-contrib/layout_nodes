@@ -1,4 +1,3 @@
-# $Id$
 
 Known Issue http://drupal.org/node/191771
   'Node' panes can have two titles or have two title areas.

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Renderer class for all In-Place Editor (IPE) behavior.

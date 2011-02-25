@@ -1,5 +1,4 @@
 <?php
-// $Id$
 /**
  * @file panels-pane.tpl.php
  * Main panel pane template

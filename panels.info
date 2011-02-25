@@ -1,4 +1,3 @@
-; $Id$
 name = Panels
 description = Core Panels display functions; provides no external UI, at least one other Panels module should be enabled.
 core = 7.x

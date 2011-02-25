@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 // Plugin definition
 $plugin = array(

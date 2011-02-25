@@ -1,4 +1,3 @@
-// $Id$
 /**
  * @file display_editor.js
  *

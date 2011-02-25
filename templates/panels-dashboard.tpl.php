@@ -1,5 +1,4 @@
 <?php
-// $Id$
 ?>
 <div class="panels-dashboard">
   <div class="dashboard-left clear-block">

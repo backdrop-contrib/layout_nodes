@@ -1,5 +1,4 @@
 <?php
-// $Id$
 /**
  * @file
  * A page creation wizard to quickly create simple landing pages.

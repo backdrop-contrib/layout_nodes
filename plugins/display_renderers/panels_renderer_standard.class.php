@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * The standard render pipeline for a Panels display object.

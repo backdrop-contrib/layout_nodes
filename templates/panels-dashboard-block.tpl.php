@@ -1,5 +1,4 @@
 <?php
-// $Id$
 ?>
 <div class="dashboard-block">
   <h3 class="dashboard-title"><?php print $block['title']; ?></h3>

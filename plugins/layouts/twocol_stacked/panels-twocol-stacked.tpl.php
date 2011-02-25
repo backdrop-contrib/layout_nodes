@@ -1,5 +1,4 @@
 <?php
-// $Id$
 /**
  * @file
  * Template for a 2 column panel layout.

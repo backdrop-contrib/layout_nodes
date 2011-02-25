@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * Legacy state manager for Panels.

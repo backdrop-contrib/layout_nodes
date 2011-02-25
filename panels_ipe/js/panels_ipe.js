@@ -1,4 +1,3 @@
-// $Id$
 
 // Ensure the $ alias is owned by jQuery.
 (function($) {

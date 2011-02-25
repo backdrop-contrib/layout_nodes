@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 class panels_mini_ui extends ctools_export_ui {
   function init($plugin) {

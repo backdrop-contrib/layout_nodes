@@ -1,4 +1,3 @@
-// $Id$
 /**
  * @file
  * Implement basic methods required by all of panels.
