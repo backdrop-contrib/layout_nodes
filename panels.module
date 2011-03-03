@@ -52,7 +52,7 @@ function panels_theme() {
     'file' => 'includes/common.inc',
   );
   $theme['panels_render_display_form'] = array(
-    'variables' => array('form' => NULL),
+    'render element' => 'element',
   );
 
   $theme['panels_dashboard'] = array(
@@ -1044,8 +1044,8 @@ function panels_render_display(&$display, $renderer = NULL) {
  */
 function theme_panels_render_display_form($vars) {
   // @todo this is probably broken in D7
-  $vars['form']['#children'] = $vars['form']['#display']->render();
-  render($vars['form']);
+  $render = $vars['element']['#display']->render();
+  $vars['element']['#children'] = $render;
   return theme('form', $vars);
 }
 
