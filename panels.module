@@ -1162,7 +1162,7 @@ function template_preprocess_panels_pane(&$vars) {
 
     // Take any that may have been in the render array we were given and
     // move them up so they appear outside the pane properly.
-    if (is_array($content->content) && isset($content->content['#contextual_links'])) {
+    if (is_array($content->content) && isset($content->content['#contextual_links']) && module_exists('contextual')) {
       $element = array(
         '#type' => 'contextual_links',
         '#contextual_links' => $content->content['#contextual_links'],
