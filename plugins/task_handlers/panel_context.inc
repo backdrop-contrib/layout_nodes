@@ -107,6 +107,7 @@ $plugin = array(
       'ajax' => FALSE,
       'silent' => TRUE,
       'form info' => array('finish text' => t('Preview')),
+      'no update and save' => TRUE,
     ),
   ),
 
