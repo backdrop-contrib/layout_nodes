@@ -258,12 +258,12 @@ class panels_renderer_editor extends panels_renderer_standard {
       ),
     );
 
-    $links[] = array(
-      'title' => '<hr />',
-      'html' => TRUE,
-    );
-
     if (user_access('administer panels styles')) {
+      $links[] = array(
+        'title' => '<hr />',
+        'html' => TRUE,
+      );
+
       $style_links = $this->get_style_links('region', $region_id);
 
       $links[] = array(
@@ -329,12 +329,12 @@ class panels_renderer_editor extends panels_renderer_standard {
       );
     }
 
-    $links[] = array(
-      'title' => '<hr />',
-      'html' => TRUE,
-    );
-
     if (user_access('administer panels styles')) {
+      $links[] = array(
+        'title' => '<hr />',
+        'html' => TRUE,
+      );
+
       $style_links = $this->get_style_links('pane', $pane->pid);
 
       $links[] = array(
