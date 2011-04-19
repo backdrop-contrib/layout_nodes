@@ -56,6 +56,7 @@ class panels_views_plugin_row_fields extends views_plugin_row_fields {
     );
 
     if (!empty($current_layout)) {
+      $fields = $this->display->handler->get_field_labels();
       $regions = panels_get_regions($current_layout, panels_new_display());
       foreach ($fields as $id => $title) {
         $form['regions'][$id] = array(
