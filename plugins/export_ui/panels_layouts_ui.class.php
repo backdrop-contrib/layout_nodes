@@ -117,8 +117,6 @@ class panels_layouts_ui extends ctools_export_ui {
     $form_state['renderer']->cache = &$cache;
 
     $form = panels_edit_display_form($form, $form_state);
-    // Make sure the theme will work since our form id is different.
-    $form['#theme'] = 'panels_edit_display_form';
 
     // If we leave the standard submit handler, it'll try to reconcile
     // content from the input, but we've not exposed that to the user. This

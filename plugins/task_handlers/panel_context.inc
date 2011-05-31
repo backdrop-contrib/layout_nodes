@@ -664,8 +664,6 @@ function panels_panel_context_edit_content($form, &$form_state) {
   $form_state['page']->display_cache[$form_state['handler_id']] = $cache;
 
   $form = panels_edit_display_form($form, $form_state);
-  // Make sure the theme will work since our form id is different.
-  $form['#theme'] = 'panels_edit_display_form';
 
   if (!isset($form_state['type']) || $form_state['type'] != 'add' && !empty($form_state['handler_id']) && !empty($form['buttons'])) {
     $form['buttons']['preview'] = $form['buttons']['return'];

@@ -282,8 +282,6 @@ class panels_mini_ui extends ctools_export_ui {
     $form_state['display_title'] = !empty($cache->display_title);
 
     $form = panels_edit_display_form($form, $form_state);
-    // Make sure the theme will work since our form id is different.
-    $form['#theme'] = 'panels_edit_display_form';
   }
 
   function edit_form_content_submit(&$form, &$form_state) {
