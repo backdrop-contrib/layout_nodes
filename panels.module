@@ -1027,7 +1027,6 @@ function panels_render_display(&$display, $renderer = NULL) {
     if ($form_context = ctools_context_get_form($display->context)) {
       $form_context->form['#theme'] = 'panels_render_display_form';
       $form_context->form['#display'] = &$display;
-      $form_context->form['#form_context_id'] = $form_context->id;
       return $form_context->form;
     }
   }
