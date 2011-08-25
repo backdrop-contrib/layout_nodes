@@ -110,8 +110,9 @@ function DrupalPanelsIPE(cache_key, cfg) {
     });
 
     // Perform visual effects in a particular sequence.
-    ipe.initButton.css('position', 'absolute');
-    ipe.initButton.fadeOut('normal');
+//    ipe.initButton.css('position', 'absolute');
+    $('div.panels-ipe-off').fadeOut('normal');
+//    ipe.initButton.fadeOut('normal');
     $('.panels-ipe-on').show('normal');
 //    $('.panels-ipe-on').fadeIn('normal');
     ipe.topParent.addClass('panels-ipe-editing');
@@ -124,7 +125,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
     // Re-hide all the IPE meta-elements
     $('div.panels-ipe-on').hide('fast');
-    ipe.initButton.css('position', 'static');
+//    ipe.initButton.css('position', 'static');
     ipe.topParent.removeClass('panels-ipe-editing');
    $('div.panels-ipe-sort-container', ipe.topParent).sortable("destroy");
   };
