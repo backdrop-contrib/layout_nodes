@@ -93,7 +93,9 @@ function panels_flexible_convert_settings(&$settings, &$layout) {
 
   if (!empty($layout['layout'])) {
     $settings = $layout['layout']->settings;
-    return $settings;
+    if ($settings) {
+      return $settings;
+    }
   }
 
   if (empty($settings)) {
