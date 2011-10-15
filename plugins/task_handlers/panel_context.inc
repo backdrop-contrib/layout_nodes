@@ -115,6 +115,8 @@ $plugin = array(
 
   // Callback to render the data.
   'render' => 'panels_panel_context_render',
+  // Callback to return addressable data
+  'addressable callback' => 'panels_panel_context_get_addressable',
 
   // Various callbacks for operations performed on the handler to ensure
   // related data is updated properly.
@@ -818,4 +820,26 @@ function panels_panel_context_edit_preview_submit(&$form, &$form_state) {
   $form_state['content'] = panels_render_display($display);
   $form_state['redirect'] = FALSE;
   $form_state['rerender'] = TRUE;
+}
+
+function panels_panel_context_get_addressable($task, $subtask_name, $handler, $address, $contexts, $arguments, $type) {
+  // Load the display
+  $display = panels_panel_context_get_display($handler);
+
+  $display->context = $contexts;
+  $display->args = $arguments;
+  $display->css_id = $handler->conf['css_id'];
+  $task_name = page_manager_make_task_name($handler->task, $handler->subtask);
+
+  $display->cache_key = 'panel_context:' . $task->name . ':' . $handler->name;
+
+  $renderer = panels_get_renderer($handler->conf['pipeline'], $display);
+  if ($type == 'content') {
+    $renderer->prepare();
+
+    $pid = array_shift($address);
+    if (!empty($renderer->prepared['panes'][$pid])) {
+      return $renderer->render_pane($renderer->prepared['panes'][$pid]);
+    }
+  }
 }
