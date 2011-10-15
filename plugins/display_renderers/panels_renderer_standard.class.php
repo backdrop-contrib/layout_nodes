@@ -340,7 +340,7 @@ class panels_renderer_standard {
    */
   function render() {
     // Let the display refer back to the renderer.
-    $display->renderer_handler = $this;
+    $this->display->renderer_handler = $this;
 
     // Attach out-of-band data first.
     $this->add_meta();
