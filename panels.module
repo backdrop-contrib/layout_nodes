@@ -308,6 +308,14 @@ function panels_ctools_plugin_directory($module, $plugin) {
   if (!module_invoke('ctools', 'api_version', PANELS_REQUIRED_CTOOLS_API)) {
     return;
   }
+
+  // We don't support the 'ctools' 'cache' plugin and pretending to causes
+  // errors when they're in use.
+  if ($module == 'ctools' && $plugin == 'cache') {
+    return;
+    // if we did we'd make a plugin/ctools_cache or something.
+  }
+
   if ($module == 'page_manager' || $module == 'panels' || $module == 'ctools' || $module == 'stylizer') {
     return 'plugins/' . $plugin;
   }
