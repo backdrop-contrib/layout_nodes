@@ -280,6 +280,10 @@ function panels_permission() {
       'title' => t("Configure caching settings on Panels"),
       'description' => t("Allows a user to configure caching on Panels displays and panes."),
     ),
+    'use panels locks' => array(
+      'title' => t('Use panel locks'),
+      'description' => t('Allows a user to lock and unlock panes in a panel display.'),
+    ),
   );
 }
 
@@ -1208,6 +1212,7 @@ function template_preprocess_panels_pane(&$vars) {
 
   // Add some usable classes based on type/subtype
   ctools_include('cleanstring');
+  if (empty($content->type)) { dsm($content); }
   $type_class = $content->type ? 'pane-'. ctools_cleanstring($content->type, array('lower case' => TRUE)) : '';
   $subtype_class = $content->subtype ? 'pane-'. ctools_cleanstring($content->subtype, array('lower case' => TRUE)) : '';
 
