@@ -1530,7 +1530,7 @@ class panels_renderer_editor extends panels_renderer_standard {
       $pane = $this->display->content[$pid];
     }
 
-    $this->commands[] = ajax_command_append("#panel-pane-$pane->panel", $this->render_pane($pane));
+    $this->commands[] = ajax_command_append("#panel-region-$pane->panel", $this->render_pane($pane));
     $this->commands[] = ajax_command_changed("#panel-pane-$pane->pid", "div.grab-title span.text");
   }
 
