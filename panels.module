@@ -276,6 +276,10 @@ function panels_permission() {
       'title' => t("Administer Panels layouts"),
       'description' => t("Allows a user to administer exported Panels layout plugins & instances."),
     ),
+    'administer panels styles' => array(
+      'title' => t("Administer Panels styles"),
+      'description' => t("Allows a user to administer the styles of Panel panes."),
+    ),
     'use panels caching features' => array(
       'title' => t("Configure caching settings on Panels"),
       'description' => t("Allows a user to configure caching on Panels displays and panes."),
