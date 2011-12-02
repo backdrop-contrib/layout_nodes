@@ -485,7 +485,7 @@ function panels_stylizer_pane_preview($plugin, $settings) {
     return theme($plugin['theme'], array('settings' => $settings, 'content' => $content, 'pane' => $pane, 'display' => $display));
   }
   else {
-    return theme('panels_pane', array('output' => $content, 'pane' => $pane, 'display' => $display));
+    return theme('panels_pane', array('content' => $content, 'pane' => $pane, 'display' => $display));
   }
 }
 
