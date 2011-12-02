@@ -538,7 +538,11 @@ class panels_renderer_standard {
         $cache = new panels_cache_object();
       }
 
-      $content = (object) ctools_content_render($pane->type, $pane->subtype, $pane->configuration, array(), $this->display->args, $this->display->context);
+      $content = ctools_content_render($pane->type, $pane->subtype, $pane->configuration, array(), $this->display->args, $this->display->context);
+
+      if (empty($content)) {
+        return;
+      }
 
       foreach (module_implements('panels_pane_content_alter') as $module) {
         $function = $module . '_panels_pane_content_alter';
