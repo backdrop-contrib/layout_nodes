@@ -1913,7 +1913,7 @@ function panels_edit_configure_pane_lock_form_submit($form, &$form_state) {
 /**
  * Form to control basic visibility settings.
  */
-function panels_edit_configure_access_settings_form(&$form_state) {
+function panels_edit_configure_access_settings_form($form, &$form_state) {
   $display = &$form_state['display'];
   $pane = &$form_state['pane'];
 
