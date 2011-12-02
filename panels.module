@@ -1241,6 +1241,7 @@ function template_preprocess_panels_pane(&$vars) {
   $vars['pane_suffix'] = !empty($content->pane_suffix) ? $content->pane_suffix : '';
 
   $vars['title'] = !empty($content->title) ? $content->title : '';
+  $vars['title_attributes_array']['class'][] = 'pane-title';
 
   $vars['feeds'] = !empty($content->feeds) ? implode(' ', $content->feeds) : '';
 
