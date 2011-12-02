@@ -646,7 +646,7 @@ class panels_display {
   }
 
   function clone_pane($pid) {
-    $pane = drupal_clone($this->content[$pid]);
+    $pane = clone $this->content[$pid];
     return $pane;
   }
 
