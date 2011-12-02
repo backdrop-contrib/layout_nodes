@@ -104,7 +104,7 @@ function panels_simple_cache_get_id($conf, $display, $args, $contexts, $pane) {
     $id .= ':' . $language->language;
   }
 
-  if(!empty($pane->configuration['use_pager'])) {
+  if(!empty($pane->configuration['use_pager']) && !empty($_GET['page'])) {
     $id .= ':p' . check_plain($_GET['page']);
   }
 
