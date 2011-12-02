@@ -235,6 +235,7 @@ function panels_edit_display_settings_form($form, &$form_state) {
       '#description' => t('The title of this panel. If left blank, a default title may be used. Set to No Title if you want the title to actually be blank.'),
       '#process' => array('ctools_dependent_process'),
       '#dependency' => array('edit-display-title-hide-title' => array(PANELS_TITLE_FIXED)),
+      '#maxlength' => 255,
     );
 
     if (!empty($display->context)) {
