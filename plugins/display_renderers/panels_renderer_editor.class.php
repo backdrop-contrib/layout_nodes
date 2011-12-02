@@ -253,7 +253,7 @@ class panels_renderer_editor extends panels_renderer_standard {
       );
     }
 
-    return theme('ctools_dropdown', array('title' => t('Display settings'), 'link' => $links, 'class' => 'panels-display-links'));
+    return theme('ctools_dropdown', array('title' => t('Display settings'), 'links' => $links, 'class' => 'panels-display-links'));
   }
 
   /**

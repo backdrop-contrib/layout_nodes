@@ -516,7 +516,6 @@ html.js div.panels-display-links div.ctools-dropdown-container ul li {
 }
 html.js #panels-dnd-main div.ctools-dropdown div.ctools-dropdown-container ul li span.text,
 html.js div.panels-display-links div.ctools-dropdown-container ul li span.text {
-
   font-style: normal;
   color: #000;
   font-weight: bold;
@@ -551,6 +550,7 @@ html.js #panels-dnd-main div.ctools-dropdown div.ctools-dropdown-container ul li
 html.js div.panels-display-links div.ctools-dropdown-container ul li .panels-sub-menu ul li a,
 html.js #panels-dnd-main div.ctools-dropdown div.ctools-dropdown-container ul li .panels-sub-menu span.panels-text,
 html.js div.panels-display-links div.ctools-dropdown-container ul li .panels-sub-menu span.panels-text {
+  width:auto;
   padding: 0 20px;
 }
 

@@ -71,7 +71,7 @@ function panels_edit_display_form($form, &$form_state) {
     $links = '';
   }
   $form['hide']['display-settings'] = array(
-    '#value' => $links,
+    '#markup' => $links,
   );
 
   $form += panels_edit_display_settings_form($form, $form_state);
