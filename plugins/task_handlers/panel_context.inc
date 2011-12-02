@@ -836,8 +836,6 @@ function panels_panel_context_get_addressable($task, $subtask_name, $handler, $a
   $display->context = $contexts;
   $display->args = $arguments;
   $display->css_id = $handler->conf['css_id'];
-  $task_name = page_manager_make_task_name($handler->task, $handler->subtask);
-
   $display->cache_key = 'panel_context:' . $task->name . ':' . $handler->name;
 
   $renderer = panels_get_renderer($handler->conf['pipeline'], $display);
