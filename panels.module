@@ -992,6 +992,8 @@ function panels_export_display($display, $prefix = '') {
   ctools_include('export');
   $output = ctools_export_object('panels_display', $display, $prefix);
 
+  $pid_counter = &drupal_static(__FUNCTION__, 0);
+
   // Initialize empty properties.
   $output .= $prefix . '$display->content = array()' . ";\n";
   $output .= $prefix . '$display->panels = array()' . ";\n";
@@ -999,7 +1001,6 @@ function panels_export_display($display, $prefix = '') {
 
   $title_pid = 0;
   if (!empty($display->content)) {
-    $pid_counter = 0;
     $region_counters = array();
     foreach ($display->content as $pane) {
       $pid = 'new-' . ++$pid_counter;
