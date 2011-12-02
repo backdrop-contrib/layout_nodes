@@ -132,6 +132,13 @@ function panels_edit_display_form($form, &$form_state) {
 }
 
 /**
+ * Handle form validation of the display content editor.
+ */
+function panels_edit_display_form_validate($form, &$form_state) {
+  panels_edit_display_settings_form_validate($form, $form_state);
+}
+
+/**
  * Handle form submission of the display content editor.
  *
  * This reads the location of the various panes from the form, which will

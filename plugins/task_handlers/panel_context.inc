@@ -674,6 +674,13 @@ function panels_panel_context_edit_content($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Validate changes to the panel content form.
+ */
+function panels_panel_context_edit_content_validate(&$form, &$form_state) {
+  panels_edit_display_form_validate($form, $form_state);
+}
+
 function panels_panel_context_edit_content_submit(&$form, &$form_state) {
   panels_edit_display_form_submit($form, $form_state);
   $handler = &$form_state['handler'];
