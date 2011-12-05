@@ -1217,7 +1217,6 @@ function template_preprocess_panels_pane(&$vars) {
 
   // Add some usable classes based on type/subtype
   ctools_include('cleanstring');
-  if (empty($content->type)) { dsm($content); }
   $type_class = $content->type ? 'pane-'. ctools_cleanstring($content->type, array('lower case' => TRUE)) : '';
   $subtype_class = $content->subtype ? 'pane-'. ctools_cleanstring($content->subtype, array('lower case' => TRUE)) : '';
 
