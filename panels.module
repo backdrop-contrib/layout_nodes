@@ -1236,6 +1236,15 @@ function template_preprocess_panels_pane(&$vars) {
     }
   }
 
+  // Set up some placeholders for constructing template file names. 
+  $base = 'panels_pane';
+  $delimiter = '__';
+  $prefix = 'pane_';
+
+  // Add template file suggestion for content type and sub-type.
+  $vars['theme_hook_suggestions'][] = $base . $delimiter . $prefix . $content->type;
+  $vars['theme_hook_suggestions'][] = $base . $delimiter . $prefix . $content->type . $delimiter . $prefix . $content->subtype;
+
   $vars['pane_prefix'] = !empty($content->pane_prefix) ? $content->pane_prefix : '';
   $vars['pane_suffix'] = !empty($content->pane_suffix) ? $content->pane_suffix : '';
 
