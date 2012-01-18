@@ -84,7 +84,7 @@ class panels_renderer_editor extends panels_renderer_standard {
 
     $output = "<div class='panel-region' id='panel-region-$region_id'>";
     $output .= $panel_buttons;
-    $output .= "<h2 class='label'>" . $this->plugins['layout']['regions'][$region_id] . "</h2>";
+    $output .= "<h2 class='label'>" . check_plain($this->plugins['layout']['regions'][$region_id]) . "</h2>";
     $output .= $content;
     $output .= "</div>";
 
