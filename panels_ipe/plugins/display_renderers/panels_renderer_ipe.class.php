@@ -208,7 +208,6 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $this->commands[] = array(
       'command' => 'endIPE',
       'key' => $this->clean_key,
-      'data' => $output,
     );
   }
 

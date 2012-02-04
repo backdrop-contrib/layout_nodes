@@ -77,6 +77,13 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
     var region = event.data.region;
     var $pane = $(event.srcElement).parents('.panels-ipe-portlet-wrapper');
+
+    // If there's a sortable that activates without having a portlet-wrapper
+    // and thus no pane, skip this.
+    if (!$pane.attr('id')) {
+      return;
+    }
+
     var paneId = $pane.attr('id').replace('panels-ipe-paneid-', '');
 
     var disabledRegions = false;
