@@ -63,7 +63,8 @@ function DrupalPanelsIPE(cache_key, cfg) {
     opacity: 0.75, // opacity of sortable while sorting
     items: 'div.panels-ipe-portlet-wrapper',
     handle: 'div.panels-ipe-draghandle',
-    cancel: '.panels-ipe-nodrag'
+    cancel: '.panels-ipe-nodrag',
+    dropOnEmpty: true
   }, cfg.sortableOptions || {});
 
   this.regions = [];
@@ -273,9 +274,6 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
       // Also remove the last panel separator.
       $('div.panel-separator', this).filter(':last').remove();
-
-      // Add a marker so we can drag things to empty containers.
-      $('div.panels-ipe-sort-container', this).append('<div>&nbsp;</div>');
     });
   }
 

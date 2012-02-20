@@ -30,6 +30,10 @@ div.panels-ipe-handlebar-wrapper {
   border: #FF000A solid 2px;
 }
 
+.panels-ipe-editing .panels-ipe-sort-container {
+  min-height: 40px;
+}
+
 .panels-ipe-editing .panels-ipe-sort-container .ui-sortable-helper {
   background: white;
 }
@@ -105,7 +109,7 @@ div.panels-ipe-placeholder h3 {
 }
 
 .panels-ipe-editing .panels-ipe-on {
-	display: block;
+  display: block;
 }
 
 /* Show editor-state-off elements initially */
