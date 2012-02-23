@@ -214,8 +214,10 @@ function DrupalPanelsIPE(cache_key, cfg) {
     ipe.showButtons();
     // Re-hide all the IPE meta-elements
     $('div.panels-ipe-on').hide('fast');
-    ipe.topParent.removeClass('panels-ipe-editing');
-    $('div.panels-ipe-sort-container', ipe.topParent).sortable("destroy");
+    if (ipe.topParent) {
+      ipe.topParent.removeClass('panels-ipe-editing');
+      $('div.panels-ipe-sort-container', ipe.topParent).sortable("destroy");
+    }
   };
 
   this.saveEditing = function() {
@@ -327,20 +329,13 @@ $(function() {
 
   Drupal.ajax.prototype.commands.unlockIPE = function(ajax, data, status) {
     if (confirm(data.message)) {
-      var ajaxOptions = {
-        type: "POST",
-        url: data.break_path,
-        data: { 'js': 1 },
-        global: true,
-        success: Drupal.CTools.AJAX.respond,
-        error: function(xhr) {
-          Drupal.CTools.AJAX.handleErrors(xhr, ipe.cfg.formPath);
-        },
-        dataType: 'json'
-      };
-
+      var ajaxOptions = ajax.options;
+      ajaxOptions.url = data.break_path;
       $.ajax(ajaxOptions);
-    };
+    }
+    else {
+      Drupal.PanelsIPE.editors[data.key].endEditing(data);
+    }
   };
 
   Drupal.ajax.prototype.commands.endIPE = function(ajax, data, status) {

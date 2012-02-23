@@ -157,7 +157,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
     if (!empty($this->cache->locked)) {
       if ($break != 'break') {
         $account  = user_load($this->cache->locked->uid);
-        $name     = theme('username', array('account' => $account));
+        $name     = format_username($account);
         $lock_age = format_interval(time() - $this->cache->locked->updated);
 
         $message = t("This panel is being edited by user !user, and is therefore locked from editing by others. This lock is !age old.\n\nClick OK to break this lock and discard any changes made by !user.", array('!user' => $name, '!age' => $lock_age));
@@ -165,7 +165,8 @@ class panels_renderer_ipe extends panels_renderer_editor {
         $this->commands[] = array(
           'command' => 'unlockIPE',
           'message' => $message,
-          'break_path' => url($this->get_url('save-form', 'break'))
+          'break_path' => url($this->get_url('save-form', 'break')),
+          'key' => $this->clean_key,
         );
         return;
       }
