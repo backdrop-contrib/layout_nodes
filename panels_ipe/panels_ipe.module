@@ -184,14 +184,14 @@ function theme_panels_ipe_toolbar($vars) {
     // Controls in this container will appear when the IPE is not on.
     $output .= '<div class="panels-ipe-button-container clearfix">';
     foreach ($ipe_buttons as $button) {
-      $output .= $button;
+      $output .= is_string($button) ? $button : drupal_render($button);
     }
     $output .= '</div>';
 
     // Controls in this container will appear when the IPE is on. It is usually
     // filled via AJAX.
     $output .= '<div class="panels-ipe-form-container clearfix"></div>';
-
+    $output .= '</div>';
   }
 
   $output .= "</div>";

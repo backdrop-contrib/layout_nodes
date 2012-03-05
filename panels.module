@@ -269,6 +269,10 @@ function panels_permission() {
       'title' => t("Use the Panels In-Place Editor"),
       'description' => t("Allows a user to utilize Panels' In-Place Editor."),
     ),
+    'change layouts in place editing' => array(
+      'title' => t("Change layouts with the Panels In-Place Editor"),
+      'description' => t("Allows a user to change layouts with the IPE."),
+    ),
     'administer advanced pane settings' => array(
       'title' => t("Configure advanced settings on Panel panes"),
       'description' => t(""),
@@ -1695,6 +1699,14 @@ function panels_print_layout($layout, $content, $meta = 'standard') {
   $renderer->meta_location = $meta;
 
   return $renderer->render();
+}
+
+/**
+ * Filter callback for array_filter to remove builders from a list of layouts.
+ */
+function _panels_builder_filter($layout) {
+  error_log($layout['name']);
+  return empty($layout['builder']);
 }
 
 // --------------------------------------------------------------------------

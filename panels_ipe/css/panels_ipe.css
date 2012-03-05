@@ -180,7 +180,7 @@ div#panels-ipe-control-container {
   left: 50%;
   display: none;
   background-color: #000;
-  padding: 0.5em 1em;
+  padding: 0.5em 0.5em;
 /*
   min-width: 9.5em;
   max-width: 14.5em;
@@ -196,11 +196,31 @@ div#panels-ipe-control-container {
   -webkit-box-shadow: #333 0px 1px 0px;
 }
 
-div#panels-ipe-control-container .ajax-progress-throbber {
+.ipe-throbber {
+  background-color: #232323;
+  background-image: url("../images/loading-small.gif");
+  background-position: center center;
+  background-repeat: no-repeat;
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  height: 24px;
+  opacity: .9;
+  padding: 4px;
+  width: 24px;
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%;
+  position: fixed;
+  top: 48.5%;
+  z-index: 1000;
+}
+
+/* Hide the drupal system throbber image */
+.ipe-throbber .throbber {
   display: none;
 }
 
-div.panels-ipe-pseudobutton {
+.panels-ipe-pseudobutton {
   cursor: pointer;
   background-color: #333;
   font:normal 11px/15px "Lucida Grande",Tahoma,Verdana,sans-serif;
@@ -211,6 +231,11 @@ div.panels-ipe-pseudobutton {
   -webkit-box-shadow: #333 0px 1px 0px;
   padding: 0.3em 0.8em;
   float: left;
+  text-decoration: none;
+}
+
+.panels-ipe-pseudobutton:hover {
+  background-color: #666;
 }
 
 div.panels-ipe-control .form-submit {
@@ -219,6 +244,9 @@ div.panels-ipe-control .form-submit {
 }
 
 div.panels-ipe-button-container {
-  margin: 0.3em 0.5em;
+  margin: 0;
 }
 
+div.panels-ipe-button-container a {
+  margin: 0.3em 0.5em;
+}

@@ -25,10 +25,39 @@ class panels_renderer_ipe extends panels_renderer_editor {
 
     ctools_include('cleanstring');
     $this->clean_key = ctools_cleanstring($this->display->cache_key);
-    $button = theme('panels_ipe_edit_button', array('class' => 'panels-ipe-startedit', 'text' => t('Customize this page')));
+    $button = array(
+      '#type' => 'link',
+      '#title' => t('Customize this page'),
+      '#href' => $this->get_url('save_form'),
+      '#id' => 'panels-ipe-customize-page',
+      '#attributes' => array(
+        'class' => array('panels-ipe-startedit', 'panels-ipe-pseudobutton'),
+      ),
+      '#ajax' => array(
+        'progress' => 'throbber',
+        'ipe_cache_key' => $this->clean_key,
+      ),
+    );
+
     panels_ipe_toolbar_add_button($this->clean_key, 'panels-ipe-startedit', $button);
 
-//    panels_ipe_get_cache_key($this->clean_key);
+    // @todo this actually should be an IPE setting instead.
+    if (user_access('change layouts in place editing')) {
+      $button = array(
+        '#type' => 'link',
+        '#title' => t('Change layout'),
+        '#href' => $this->get_url('change_layout'),
+        '#attributes' => array(
+          'class' => array('panels-ipe-change-layout', 'panels-ipe-pseudobutton', 'ctools-modal-layout'),
+        ),
+        '#ajax' => array(
+          'progress' => 'throbber',
+          'ipe_cache_key' => $this->clean_key,
+        ),
+      );
+    }
+
+    panels_ipe_toolbar_add_button($this->clean_key, 'panels-ipe-change-layout', $button);
 
     ctools_include('ajax');
     ctools_include('modal');
@@ -39,19 +68,12 @@ class panels_renderer_ipe extends panels_renderer_editor {
     ctools_add_js('panels_ipe', 'panels_ipe');
     ctools_add_css('panels_ipe', 'panels_ipe');
 
-    $settings = array(
-      'formPath' => url($this->get_url('save-form')),
-    );
     drupal_add_js(array('PanelsIPECacheKeys' => array($this->clean_key)), 'setting');
-    drupal_add_js(array('PanelsIPESettings' => array($this->clean_key => $settings)), 'setting');
 
     drupal_add_library('system', 'ui.draggable');
     drupal_add_library('system', 'ui.droppable');
     drupal_add_library('system', 'ui.sortable');
-//    drupal_add_js('misc/ui/jquery.ui.draggable.min.js');
-//    drupal_add_js('misc/ui/jquery.ui.droppable.min.js');
-//    drupal_add_js('misc/ui/jquery.ui.sortable.min.js');
-//    jquery_ui_add(array('ui.draggable', 'ui.droppable', 'ui.sortable'));
+
     parent::add_meta();
   }
 
@@ -151,9 +173,9 @@ class panels_renderer_ipe extends panels_renderer_editor {
   }
 
   /**
-   * AJAX entry point to create the controller form for an IPE.
+   * This is a generic lock test.
    */
-  function ajax_save_form($break = NULL) {
+  function ipe_test_lock($url, $break) {
     if (!empty($this->cache->locked)) {
       if ($break != 'break') {
         $account  = user_load($this->cache->locked->uid);
@@ -165,14 +187,38 @@ class panels_renderer_ipe extends panels_renderer_editor {
         $this->commands[] = array(
           'command' => 'unlockIPE',
           'message' => $message,
-          'break_path' => url($this->get_url('save-form', 'break')),
+          'break_path' => url($this->get_url($url, 'break')),
           'key' => $this->clean_key,
         );
-        return;
+        return TRUE;
       }
 
       // Break the lock.
       panels_edit_cache_break_lock($this->cache);
+    }
+  }
+
+  /**
+   * AJAX callback to unlock the IPE.
+   *
+   * This is called whenever something server side determines that editing
+   * has stopped and cleans up no longer needed locks.
+   *
+   * It has no visible return value as this is considered a background task
+   * and the client side has already given all indications that things are
+   * now in a 'normal' state.
+   */
+  function ajax_unlock_ipe() {
+    panels_edit_cache_clear($this->cache);
+    $this->commands[] = array();
+  }
+
+  /**
+   * AJAX entry point to create the controller form for an IPE.
+   */
+  function ajax_save_form($break = NULL) {
+    if ($this->ipe_test_lock('save-form', $break)) {
+      return;
     }
 
     $form_state = array(
@@ -187,11 +233,24 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $output = drupal_build_form('panels_ipe_edit_control_form', $form_state);
     if (empty($form_state['executed'])) {
       // At this point, we want to save the cache to ensure that we have a lock.
+      $this->cache->ipe_locked = TRUE;
       panels_edit_cache_set($this->cache);
       $this->commands[] = array(
         'command' => 'initIPE',
         'key' => $this->clean_key,
         'data' => drupal_render($output),
+        'lockPath' => $this->get_url('unlock_ipe'),
+      );
+      return;
+    }
+
+    // Check to see if we have a lock that was broken. If so we need to
+    // inform the user and abort.
+    if (empty($this->cache->ipe_locked)) {
+      $this->commands[] = ajax_command_alert(t('A lock you had has been externally broken, and all your changes have been reverted.'));
+      $this->commands[] = array(
+        'command' => 'cancelIPE',
+        'key' => $this->clean_key,
       );
       return;
     }
@@ -210,6 +269,83 @@ class panels_renderer_ipe extends panels_renderer_editor {
       'command' => 'endIPE',
       'key' => $this->clean_key,
     );
+  }
+
+  /**
+   * AJAX entry point to create the controller form for an IPE.
+   */
+  function ajax_change_layout($break = NULL) {
+    if ($this->ipe_test_lock('change_layout', $break)) {
+      return;
+    }
+
+    // At this point, we want to save the cache to ensure that we have a lock.
+    $this->cache->ipe_locked = TRUE;
+    panels_edit_cache_set($this->cache);
+
+    ctools_include('plugins', 'panels');
+    ctools_include('common', 'panels');
+
+    // @todo figure out a solution for this, it's critical
+    if (isset($this->display->allowed_layouts)) {
+      $layouts = $this->display->allowed_layouts;
+    }
+    else {
+      $layouts = panels_common_get_allowed_layouts('panels_page');
+    }
+
+    // Filter out builders
+    $layouts = array_filter($layouts, '_panels_builder_filter');
+
+    $output = panels_common_print_layout_links($layouts, $this->get_url('set_layout'), array('attributes' => array('class' => array('use-ajax'))));
+
+    $this->commands[] = ctools_modal_command_display(t('Change layout'), $output);
+    $this->commands[] = array(
+      'command' => 'IPEsetLockState',
+      'key' => $this->clean_key,
+      'lockPath' => $this->get_url('unlock_ipe'),
+    );
+  }
+
+  function ajax_set_layout($layout) {
+    ctools_include('context');
+    ctools_include('display-layout', 'panels');
+    $form_state = array(
+      'layout' => $layout,
+      'display' => $this->display,
+      'finish' => t('Save'),
+      'no_redirect' => TRUE,
+    );
+
+    $output = drupal_build_form('panels_change_layout', $form_state);
+    $output = drupal_render($output);
+    if (!empty($form_state['executed'])) {
+      if (isset($form_state['back'])) {
+        return $this->ajax_change_layout();
+      }
+
+      if (!empty($form_state['clicked_button']['#save-display'])) {
+        // Saved. Save the cache.
+        panels_edit_cache_save($this->cache);
+        $this->display->skip_cache;
+
+        // Since the layout changed, we have to update these things in the
+        // renderer in order to get the right settings.
+        $layout = panels_get_layout($this->display->layout);
+        $this->plugins['layout'] = $layout;
+        if (!isset($layout['regions'])) {
+          $this->plugins['layout']['regions'] = panels_get_regions($layout, $this->display);
+        }
+
+        $this->meta_location = 'inline';
+
+        $this->commands[] = ajax_command_replace("#panels-ipe-display-{$this->clean_key}", panels_render_display($this->display, $this));
+        $this->commands[] = ctools_modal_command_dismiss();
+        return;
+      }
+    }
+
+    $this->commands[] = ctools_modal_command_display(t('Change layout'), $output);
   }
 
   /**

@@ -29,7 +29,7 @@ Drupal.PanelsIPE = {
 // A ready function should be sufficient for this, at least for now
 $(function() {
   $.each(Drupal.settings.PanelsIPECacheKeys, function() {
-    Drupal.PanelsIPE.editors[this] = new DrupalPanelsIPE(this, Drupal.settings.PanelsIPESettings[this]);
+    Drupal.PanelsIPE.editors[this] = new DrupalPanelsIPE(this);
     Drupal.PanelsIPE.editors[this].showContainer();
   });
 });
@@ -51,8 +51,10 @@ Drupal.behaviors.PanelsIPE = {
  * discrete IPE elements. This will result in greater IPE flexibility.
  */
 function DrupalPanelsIPE(cache_key, cfg) {
+  cfg = cfg || {};
   var ipe = this;
   this.key = cache_key;
+  this.lockPath = null;
   this.state = {};
   this.container = $('#panels-ipe-control-container');
   this.control = $('div#panels-ipe-control-' + cache_key);
@@ -69,6 +71,46 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
   this.regions = [];
   this.sortables = {};
+
+  $(document).bind('CToolsDetachBehaviors', function() {
+    // If the IPE is off and the container is not visible, then we need
+    // to reshow the container on modal close.
+    if (!$('.panels-ipe-form-container', ipe.control).html() && !ipe.container.is(':visible')) {
+      ipe.showContainer();
+      ipe.cancelLock();
+    }
+  });
+
+  // If a user navigates away from a locked IPE, cancel the lock in the background.
+  $(window).bind('unload', function() {
+    ipe.cancelLock(true);
+  });
+
+  /**
+   * If something caused us to abort what we were doing, send a background
+   * cancel lock request to the server so that we do not leave stale locks
+   * hanging around.
+   */
+  this.cancelLock = function(sync) {
+    // If there's a lockpath and an ajax available, inform server to clear lock.
+    // We borrow the ajax options from the customize this page link.
+    if (ipe.lockPath && Drupal.ajax['panels-ipe-customize-page']) {
+      var ajaxOptions = {
+        type: 'POST',
+        url: ipe.lockPath
+      }
+
+      if (sync) {
+        ajaxOptions.async = false;
+      }
+
+      // Make sure we don't somehow get another one:
+      ipe.lockPath = null;
+
+      // Send the request. This is synchronous to prevent being cancelled.
+      $.ajax(ajaxOptions);
+    }
+  }
 
   this.activateSortable = function(event, ui) {
     if (!Drupal.settings.Panels || !Drupal.settings.Panels.RegionLock) {
@@ -154,29 +196,10 @@ function DrupalPanelsIPE(cache_key, cfg) {
       element_settings.setClick = true;
       element_settings.event = 'click';
       element_settings.progress = { 'type': 'throbber' };
+      element_settings.ipe_cache_key = cache_key;
 
       var base = $(this).attr('id');
-      Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
-      if ($(this).attr('id') == 'panels-ipe-save') {
-        Drupal.ajax[base].options.beforeSerialize = function (element_settings, options) {
-          ipe.saveEditing();
-          return Drupal.ajax[base].beforeSerialize(element_settings, options);
-        };
-        Drupal.ajax[base].oldEventResponse = Drupal.ajax[base].eventResponse;
-        Drupal.ajax[base].eventResponse = function (element, event) {
-          var val = this.oldEventResponse(element, event);
-          if (this.ajaxing) {
-            ipe.hideContainer();
-          }
-          return val;
-        };
-
-      }
-      if ($(this).attr('id') == 'panels-ipe-cancel') {
-        Drupal.ajax[base].options.beforeSend = function () {
-          return ipe.cancelEditing();
-        };
-      }
+      Drupal.ajax[ipe.base] = new Drupal.ajax(base, this, element_settings);
     });
 
     // Perform visual effects in a particular sequence.
@@ -206,7 +229,8 @@ function DrupalPanelsIPE(cache_key, cfg) {
     ipe.showContainer();
   };
 
-  this.endEditing = function(data) {
+  this.endEditing = function() {
+    ipe.lockPath = null;
     $('.panels-ipe-form-container', ipe.control).empty();
     // Re-show all the IPE non-editing meta-elements
     $('div.panels-ipe-off').show('fast');
@@ -237,25 +261,29 @@ function DrupalPanelsIPE(cache_key, cfg) {
     });
   }
 
+  this.cancelIPE = function() {
+    ipe.hideContainer();
+    ipe.topParent.fadeOut('medium', function() {
+      ipe.topParent.replaceWith(ipe.backup.clone());
+      ipe.topParent = $('div#panels-ipe-display-' + ipe.key);
+
+      // Processing of these things got lost in the cloning, but the classes remained behind.
+      // @todo this isn't ideal but I can't seem to figure out how to keep an unprocessed backup
+      // that will later get processed.
+      $('.ctools-use-modal-processed', ipe.topParent).removeClass('ctools-use-modal-processed');
+      $('.pane-delete-processed', ipe.topParent).removeClass('pane-delete-processed');
+      ipe.topParent.fadeIn('medium');
+      Drupal.attachBehaviors();
+    });
+  };
+
   this.cancelEditing = function() {
     if (ipe.topParent.hasClass('changed')) {
       ipe.changed = true;
     }
 
     if (!ipe.changed || confirm(Drupal.t('This will discard all unsaved changes. Are you sure?'))) {
-      ipe.hideContainer();
-      ipe.topParent.fadeOut('medium', function() {
-        ipe.topParent.replaceWith(ipe.backup.clone());
-        ipe.topParent = $('div#panels-ipe-display-' + ipe.key);
-
-        // Processing of these things got lost in the cloning, but the classes remained behind.
-        // @todo this isn't ideal but I can't seem to figure out how to keep an unprocessed backup
-        // that will later get processed.
-        $('.ctools-use-modal-processed', ipe.topParent).removeClass('ctools-use-modal-processed');
-        $('.pane-delete-processed', ipe.topParent).removeClass('pane-delete-processed');
-        ipe.topParent.fadeIn('medium');
-        Drupal.attachBehaviors();
-      });
+      this.cancelIPE();
     }
     else {
       // Cancel the submission.
@@ -281,49 +309,26 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
   this.createSortContainers();
 
-  var element_settings = {
-    url: ipe.cfg.formPath,
-    event: 'click',
-    keypress: false,
-    // No throbber at all.
-    progress: { 'type': 'none' }
-  };
-
-  Drupal.ajax['ipe-ajax'] = new Drupal.ajax('ipe-ajax', $('div.panels-ipe-startedit', this.control).get(0), element_settings);
-
-  Drupal.ajax['ipe-ajax'].oldEventResponse = Drupal.ajax['ipe-ajax'].eventResponse;
-  Drupal.ajax['ipe-ajax'].eventResponse = function (element, event) {
-    this.oldEventResponse(element, event);
-    if (this.ajaxing) {
-      ipe.hideContainer();
-      $('div.panels-ipe-off').fadeOut('normal');
-    }
-  };
-
-/*
-  var ajaxOptions = {
-    type: "POST",
-    url: ,
-    data: { 'js': 1 },
-    global: true,
-    success: Drupal.CTools.AJAX.respond,
-    error: function(xhr) {
-      Drupal.CTools.AJAX.handleErrors(xhr, ipe.cfg.formPath);
-    },
-    dataType: 'json'
-  };
-
-  $('div.panels-ipe-startedit', this.control).click(function() {
-    var $this = $(this);
-    $.ajax(ajaxOptions);
-  });
-  */
 };
 
 $(function() {
   Drupal.ajax.prototype.commands.initIPE = function(ajax, data, status) {
     if (Drupal.PanelsIPE.editors[data.key]) {
       Drupal.PanelsIPE.editors[data.key].initEditing(data.data);
+      Drupal.PanelsIPE.editors[data.key].lockPath = data.lockPath;
+    }
+  };
+
+  Drupal.ajax.prototype.commands.IPEsetLockState = function(ajax, data, status) {
+    if (Drupal.PanelsIPE.editors[data.key]) {
+      Drupal.PanelsIPE.editors[data.key].lockPath = data.lockPath;
+    }
+  };
+
+  Drupal.ajax.prototype.commands.cancelIPE = function(ajax, data, status) {
+    if (Drupal.PanelsIPE.editors[data.key]) {
+      Drupal.PanelsIPE.editors[data.key].cancelIPE();
+      Drupal.PanelsIPE.editors[data.key].endEditing();
     }
   };
 
@@ -334,17 +339,61 @@ $(function() {
       $.ajax(ajaxOptions);
     }
     else {
-      Drupal.PanelsIPE.editors[data.key].endEditing(data);
+      Drupal.PanelsIPE.editors[data.key].endEditing();
     }
   };
 
   Drupal.ajax.prototype.commands.endIPE = function(ajax, data, status) {
     if (Drupal.PanelsIPE.editors[data.key]) {
-      Drupal.PanelsIPE.editors[data.key].endEditing(data);
+      Drupal.PanelsIPE.editors[data.key].endEditing();
     }
   };
 
+  /**
+   * Override the eventResponse on ajax.js so we can add a little extra
+   * behavior.
+   */
+  Drupal.ajax.prototype.ipeReplacedEventResponse = Drupal.ajax.prototype.eventResponse;
+  Drupal.ajax.prototype.eventResponse = function (element, event) {
+    var retval = this.ipeReplacedEventResponse(element, event);
+    if (this.ajaxing && this.element_settings.ipe_cache_key) {
+      // Move the throbber so that it appears outside our container.
+      if (this.progress.element) {
+        $(this.progress.element).addClass('ipe-throbber').appendTo($('body'));
+      }
+      Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].hideContainer();
+      $('div.panels-ipe-off').fadeOut('normal');
+    }
+    return retval;
+  };
 
+  /**
+   * Override the eventResponse on ajax.js so we can add a little extra
+   * behavior.
+   */
+  Drupal.ajax.prototype.ipeReplacedError = Drupal.ajax.prototype.error;
+  Drupal.ajax.prototype.error = function (response, uri) {
+    var retval = this.ipeReplacedError(response, uri);
+    if (this.element_settings.ipe_cache_key) {
+      Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].showContainer();
+    }
+  };
+
+  Drupal.ajax.prototype.ipeReplacedBeforeSerialize = Drupal.ajax.prototype.beforeSerialize;
+  Drupal.ajax.prototype.beforeSerialize = function (element_settings, options) {
+    if ($(this.element).attr('id') == 'panels-ipe-save') {
+      Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].saveEditing();
+    };
+    return this.ipeReplacedBeforeSerialize(element_settings, options);
+  };
+
+  Drupal.ajax.prototype.ipeReplacedBeforeSend = Drupal.ajax.prototype.beforeSend;
+  Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
+    this.ipeReplacedBeforeSend(xmlhttprequest, options);
+    if ($(this.element).attr('id') == 'panels-ipe-cancel') {
+      return Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].cancelEditing();
+    }
+  };
 });
 
 })(jQuery);
