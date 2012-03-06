@@ -13,6 +13,13 @@ class panels_renderer_editor extends panels_renderer_standard {
    */
   var $commands = array();
   var $admin = TRUE;
+
+  /**
+   * Set to true if edit links (for panes and regions) should not be displayed.
+   * This can be used for special edit modes such as layout change and layout
+   * builder that do not actually have real content.
+   */
+  var $no_edit_links = FALSE;
   // -------------------------------------------------------------------------
   // Display edit rendering.
 
@@ -260,6 +267,9 @@ class panels_renderer_editor extends panels_renderer_standard {
    * Render the links to display when editing a region.
    */
   function get_region_links($region_id) {
+    if (!empty($this->no_edit_links)) {
+      return '';
+    }
     $links = array();
     $links[] = array(
       'title' => t('Add content'),
@@ -291,6 +301,9 @@ class panels_renderer_editor extends panels_renderer_standard {
    * Render the links to display when editing a pane.
    */
   function get_pane_links($pane, $content_type) {
+    if (!empty($this->no_edit_links)) {
+      return '';
+    }
     $links = array();
 
     if (!empty($pane->shown)) {
