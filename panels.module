@@ -76,6 +76,20 @@ function panels_theme() {
     'template' => 'panels-dashboard-block',
   );
 
+  $theme['panels_add_content_modal'] = array(
+    'variables' => array('renderer' => NULL, 'categories' => array(), 'region' => NULL, 'category' => NULL, 'column_count' => 2),
+    'path' => drupal_get_path('module', 'panels') . '/templates',
+    'file' => '../includes/add-content.inc',
+    'template' => 'panels-add-content-modal',
+  );
+
+  $theme['panels_add_content_link'] = array(
+    'variables' => array('renderer' => NULL, 'region' => NULL, 'content_type' => NULL),
+    'path' => drupal_get_path('module', 'panels') . '/templates',
+    'file' => '../includes/add-content.inc',
+    'template' => 'panels-add-content-link',
+  );
+
   // We don't need layout and style themes in maintenance mode.
   // Disabling this: See http://drupal.org/node/979912 for information.
 //  if (defined('MAINTENANCE_MODE')) {
