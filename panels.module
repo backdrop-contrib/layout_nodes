@@ -37,7 +37,7 @@ function panels_theme() {
 
   $theme = array();
   $theme['panels_layout_link'] = array(
-    'variables' => array('title' => NULL, 'id' => NULL, 'image' => NULL, 'link' => NULL),
+    'variables' => array('title' => NULL, 'id' => NULL, 'image' => NULL, 'link' => NULL, 'class' => NULL),
   );
   $theme['panels_layout_icon'] = array(
     'variables' => array('id' => NULL, 'image' => NULL, 'title' => NULL),
@@ -1112,8 +1112,9 @@ function theme_panels_layout_icon($vars) {
 function theme_panels_layout_link($vars) {
   $title = $vars['title'];
   $image = $vars['image'];
+  $class = $vars['class'];
 
-  $output = '<div class="layout-link">';
+  $output = '<div class="' . implode(' ', $class) . '">';
   $output .= $vars['image'];
   $output .= '<div>' . $vars['title'] . '</div>';
   $output .= '</div>';
@@ -1124,16 +1125,23 @@ function theme_panels_layout_link($vars) {
  * Print the layout link. Sends out to a theme function.
  * @layout
  */
-function panels_print_layout_link($id, $layout, $link, $options = array()) {
+function panels_print_layout_link($id, $layout, $link, $options = array(), $current_layout = FALSE) {
   if (isset($options['query']['q'])) {
     unset($options['query']['q']);
+  }
+
+  // Setup classes for layout link, including current-layout information
+  $class = array('layout-link');
+  if ($current_layout == $id) {
+    $options['attributes']['class'][] = 'current-layout-link';
+    $class[] = 'current-layout';
   }
 
   ctools_add_css('panels_admin', 'panels');
   $file = $layout['path'] . '/' . $layout['icon'];
   $image = l(theme('image', array('path' => $file)), $link, array('html' => true) + $options);
   $title = l($layout['title'], $link, $options);
-  return theme('panels_layout_link', array('title' => $title, 'image' => $image));
+  return theme('panels_layout_link', array('title' => $title, 'image' => $image, 'class' => $class));
 }
 
 
@@ -1705,7 +1713,6 @@ function panels_print_layout($layout, $content, $meta = 'standard') {
  * Filter callback for array_filter to remove builders from a list of layouts.
  */
 function _panels_builder_filter($layout) {
-  error_log($layout['name']);
   return empty($layout['builder']);
 }
 

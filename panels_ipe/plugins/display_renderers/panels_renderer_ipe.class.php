@@ -297,7 +297,10 @@ class panels_renderer_ipe extends panels_renderer_editor {
     // Filter out builders
     $layouts = array_filter($layouts, '_panels_builder_filter');
 
-    $output = panels_common_print_layout_links($layouts, $this->get_url('set_layout'), array('attributes' => array('class' => array('use-ajax'))));
+    // Define the current layout
+    $current_layout = (!empty($this->plugins['layout']['name'])) ? $this->plugins['layout']['name'] : NULL;
+    
+    $output = panels_common_print_layout_links($layouts, $this->get_url('set_layout'), array('attributes' => array('class' => array('use-ajax'))), $current_layout);
 
     $this->commands[] = ctools_modal_command_display(t('Change layout'), $output);
     $this->commands[] = array(
