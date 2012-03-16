@@ -538,7 +538,7 @@ class panels_renderer_standard {
 
       foreach (module_implements('panels_pane_content_alter') as $module) {
         $function = $module . '_panels_pane_content_alter';
-        $function($content, $pane, $this->display->args, $this->display->context);
+        $function($content, $pane, $this->display->args, $this->display->context, $this, $this->display);
       }
       if ($caching && isset($cache)) {
         $cache->set_content($content);
