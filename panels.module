@@ -1742,3 +1742,21 @@ function panels_get_path($file, $base_path = FALSE, $module = 'panels') {
   $output = $base_path ? base_path() : '';
   return $output . drupal_get_path('module', $module) . '/' . $file;
 }
+
+/**
+ * Remove default sidebar related body classes and provide own css classes
+ */
+function panels_preprocess_html(&$vars) {
+  $panel_body_css = &drupal_static('panel_body_css');
+  if (!empty($panel_body_css['body_classes_to_remove'])) {
+    $classes_to_remove = explode(' ', $panel_body_css['body_classes_to_remove']);
+    foreach ($vars['classes_array'] as $key => $css_class) {
+      if (in_array($css_class, $classes_to_remove)) {
+        unset($vars['classes_array'][$key]);
+      }
+    }
+  }
+  if (!empty($panel_body_css['body_classes_to_add'])) {
+    $vars['classes_array'][] = check_plain($panel_body_css['body_classes_to_add']);
+  }
+}
