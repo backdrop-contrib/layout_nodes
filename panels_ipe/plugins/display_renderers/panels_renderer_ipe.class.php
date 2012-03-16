@@ -261,6 +261,10 @@ class panels_renderer_ipe extends panels_renderer_editor {
     if (!empty($form_state['clicked_button']['#save-display'])) {
       // Saved. Save the cache.
       panels_edit_cache_save($this->cache);
+      // A rerender should fix IDs on added panes as well as ensure style changes are
+      // rendered.
+      $this->meta_location = 'inline';
+      $this->commands[] = ajax_command_replace("#panels-ipe-display-{$this->clean_key}", panels_render_display($this->display, $this));
     }
     else {
       // Cancelled. Clear the cache.

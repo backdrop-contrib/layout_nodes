@@ -26,16 +26,18 @@ Drupal.PanelsIPE = {
   }
 }
 
-// A ready function should be sufficient for this, at least for now
-$(function() {
-  $.each(Drupal.settings.PanelsIPECacheKeys, function() {
-    Drupal.PanelsIPE.editors[this] = new DrupalPanelsIPE(this);
-    Drupal.PanelsIPE.editors[this].showContainer();
-  });
-});
 
 Drupal.behaviors.PanelsIPE = {
   attach: function(context) {
+    for (var i in Drupal.settings.PanelsIPECacheKeys) {
+      var key = Drupal.settings.PanelsIPECacheKeys[i];
+      $('div#panels-ipe-display-' + key + ':not(.panels-ipe-processed)')
+        .addClass('panels-ipe-processed')
+        .each(function() {
+          Drupal.PanelsIPE.editors[key] = new DrupalPanelsIPE(key);
+          Drupal.PanelsIPE.editors[key].showContainer();
+        });
+    }
     Drupal.PanelsIPE.bindClickDelete(context);
   }
 };
@@ -406,15 +408,7 @@ $(function() {
     };
     return this.ipeReplacedBeforeSerialize(element_settings, options);
   };
-/*
-  Drupal.ajax.prototype.ipeReplacedBeforeSend = Drupal.ajax.prototype.beforeSend;
-  Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
-    this.ipeReplacedBeforeSend(xmlhttprequest, options);
-    if ($(this.element).attr('id') == 'panels-ipe-cancel') {
-      return Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].cancelEditing();
-    }
-  };
- */
+
 });
 
 /**
