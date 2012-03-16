@@ -962,6 +962,7 @@ class panels_renderer_editor extends panels_renderer_standard {
     $form_state = array(
       'display' => &$this->display,
       'style' => $style,
+      'pane' => ($type == 'pane') ? $this->display->content[$pid] : NULL,
       'title' => $title,
       'ajax' => TRUE,
       'type' => $type,
