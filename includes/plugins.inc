@@ -209,7 +209,7 @@ class panels_cache_object {
     }
     if (!empty($this->js)) {
       foreach ($this->js as $key => $args) {
-        if ($key != 'settings') {
+        if ($key !== 'settings') {
           drupal_add_js($args['data'], $args);
         }
         else {
