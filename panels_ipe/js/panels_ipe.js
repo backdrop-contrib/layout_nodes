@@ -284,6 +284,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
     if (!ipe.changed || confirm(Drupal.t('This will discard all unsaved changes. Are you sure?'))) {
       this.cancelIPE();
+      return true;
     }
     else {
       // Cancel the submission.
@@ -355,6 +356,12 @@ $(function() {
    */
   Drupal.ajax.prototype.ipeReplacedEventResponse = Drupal.ajax.prototype.eventResponse;
   Drupal.ajax.prototype.eventResponse = function (element, event) {
+    if ($(this.element).attr('id') == 'panels-ipe-cancel') {
+      if (!Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].cancelEditing()) {
+        return false;
+      }
+    }
+
     var retval = this.ipeReplacedEventResponse(element, event);
     if (this.ajaxing && this.element_settings.ipe_cache_key) {
       // Move the throbber so that it appears outside our container.
@@ -386,7 +393,7 @@ $(function() {
     };
     return this.ipeReplacedBeforeSerialize(element_settings, options);
   };
-
+/*
   Drupal.ajax.prototype.ipeReplacedBeforeSend = Drupal.ajax.prototype.beforeSend;
   Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
     this.ipeReplacedBeforeSend(xmlhttprequest, options);
@@ -394,6 +401,7 @@ $(function() {
       return Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].cancelEditing();
     }
   };
+ */
 });
 
 })(jQuery);
