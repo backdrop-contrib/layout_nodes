@@ -1202,7 +1202,7 @@ function template_preprocess_panels_pane(&$vars) {
   $vars['classes_array'] = array();
   $vars['admin_links'] = '';
 
-  if (user_access('access contextual links')) {
+  if (module_exists('contextual') && user_access('access contextual links')) {
     $links = array();
     // These are specified by the content.
     if (!empty($content->admin_links)) {
@@ -1211,7 +1211,7 @@ function template_preprocess_panels_pane(&$vars) {
 
     // Take any that may have been in the render array we were given and
     // move them up so they appear outside the pane properly.
-    if (is_array($content->content) && isset($content->content['#contextual_links']) && module_exists('contextual')) {
+    if (is_array($content->content) && isset($content->content['#contextual_links'])) {
       $element = array(
         '#type' => 'contextual_links',
         '#contextual_links' => $content->content['#contextual_links'],
