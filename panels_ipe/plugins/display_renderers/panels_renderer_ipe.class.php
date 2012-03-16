@@ -37,6 +37,8 @@ class panels_renderer_ipe extends panels_renderer_editor {
         'progress' => 'throbber',
         'ipe_cache_key' => $this->clean_key,
       ),
+      '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
+      '#suffix' => '</div>',
     );
 
     panels_ipe_toolbar_add_button($this->clean_key, 'panels-ipe-startedit', $button);
@@ -54,6 +56,9 @@ class panels_renderer_ipe extends panels_renderer_editor {
           'progress' => 'throbber',
           'ipe_cache_key' => $this->clean_key,
         ),
+
+      '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
+      '#suffix' => '</div>',
       );
     }
 
@@ -158,10 +163,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $empty_ph = theme('panels_ipe_placeholder_pane', array('region_id' => $region_id, 'region_title' => $this->plugins['layout']['regions'][$region_id]));
 
     // Wrap the placeholder in some guaranteed markup.
-    $panes['empty_placeholder'] = '<div class="panels-ipe-placeholder panels-ipe-on panels-ipe-portlet-marker panels-ipe-portlet-static">' . $empty_ph . "</div>";
-
-    // Generate this region's add new pane button. FIXME waaaaay too hardcoded
-    $panes['add_button'] = theme('panels_ipe_add_pane_button', array('region_id' => $region_id, 'display' => $this->display, 'renderer' => $this));
+    $panes['empty_placeholder'] = '<div class="panels-ipe-placeholder panels-ipe-on panels-ipe-portlet-marker panels-ipe-portlet-static">' . $empty_ph . theme('panels_ipe_add_pane_button', array('region_id' => $region_id, 'display' => $this->display, 'renderer' => $this)) . "</div>";
 
     $output = parent::render_region($region_id, $panes);
     $output = theme('panels_ipe_region_wrapper', array('output' => $output, 'region_id' => $region_id, 'display' => $this->display, 'renderer' => $this));
@@ -298,8 +300,8 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $layouts = array_filter($layouts, '_panels_builder_filter');
 
     // Define the current layout
-    $current_layout = (!empty($this->plugins['layout']['name'])) ? $this->plugins['layout']['name'] : NULL;
-    
+    $current_layout = $this->plugins['layout']['name'];
+
     $output = panels_common_print_layout_links($layouts, $this->get_url('set_layout'), array('attributes' => array('class' => array('use-ajax'))), $current_layout);
 
     $this->commands[] = ctools_modal_command_display(t('Change layout'), $output);

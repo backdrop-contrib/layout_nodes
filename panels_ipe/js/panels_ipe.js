@@ -159,7 +159,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
   }
 
   this.initSorting = function() {
-    var $region = $(this).parent('.panels-ipe-region');
+    var $region = $(this).parents('.panels-ipe-region');
     var region = $region.attr('id').replace('panels-ipe-regionid-', '');
     ipe.sortables[region] = $(this).sortable(ipe.sortableOptions);
     ipe.regions.push(region);
@@ -203,9 +203,23 @@ function DrupalPanelsIPE(cache_key, cfg) {
     });
 
     // Perform visual effects in a particular sequence.
-    $('.panels-ipe-on').show('normal');
+    // .show() + .hide() cannot have speeds associated with them, otherwise
+    // it clears out inline styles.
+    $('.panels-ipe-on').show();
     ipe.showForm();
     ipe.topParent.addClass('panels-ipe-editing');
+
+    //Reposition the "Add new pane" button
+    $('.panels-ipe-newblock').each(function() {
+      var link_width_half = parseInt($(this).children('a').outerWidth() / 2);
+
+      $(this).css('margin-left', '-' + link_width_half + 'px');
+
+      $(this).css('margin-top', '-' + parseInt($(this).children('a').outerHeight() / 2) + 'px');
+
+      $(this).parents('.panels-ipe-placeholder').find('h3').css('width', parseInt(($(this).parents('.panels-ipe-placeholder').width() / 2) - link_width_half) + 'px');
+    });
+
   };
 
   this.hideContainer = function() {
@@ -214,7 +228,6 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
   this.showContainer = function() {
     ipe.container.slideDown('normal');
-    ipe.container.css('margin-left', '-' + parseInt(ipe.container.outerWidth() / 2) + 'px');
   };
 
   this.showButtons = function() {
@@ -237,7 +250,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
     ipe.showButtons();
     // Re-hide all the IPE meta-elements
-    $('div.panels-ipe-on').hide('fast');
+    $('div.panels-ipe-on').hide();
     if (ipe.topParent) {
       ipe.topParent.removeClass('panels-ipe-editing');
       $('div.panels-ipe-sort-container', ipe.topParent).sortable("destroy");
@@ -300,7 +313,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
       // Move our gadgets outside of the sort container so that sortables
       // cannot be placed after them.
       $('div.panels-ipe-portlet-static', this).each(function() {
-        $(this).appendTo($(this).parent().parent());
+        $(this).prependTo($(this).parent().parent());
       });
 
       // Also remove the last panel separator.
@@ -369,8 +382,8 @@ $(function() {
         $(this.progress.element).addClass('ipe-throbber').appendTo($('body'));
       }
       Drupal.PanelsIPE.editors[this.element_settings.ipe_cache_key].hideContainer();
-      $('div.panels-ipe-off').fadeOut('normal');
     }
+    // @TODO $('#panels-ipe-throbber-backdrop').remove();
     return retval;
   };
 
@@ -403,5 +416,20 @@ $(function() {
   };
  */
 });
+
+/**
+ * Apply margin to bottom of the page.
+ *
+ * Note that directly applying marginBottom does not work in IE. To prevent
+ * flickering/jumping page content with client-side caching, this is a regular
+ * Drupal behavior.
+ *
+ * @see admin_menu.js via https://drupal.org/project/admin_menu
+ */
+Drupal.behaviors.panelsIpeMarginBottom = {
+  attach: function () {
+    $('body:not(.panels-ipe)').addClass('panels-ipe');
+  }
+};
 
 })(jQuery);
