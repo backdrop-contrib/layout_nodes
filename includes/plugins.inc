@@ -188,7 +188,7 @@ class panels_cache_object {
     $tokens = ctools_set_page_token();
     foreach ($this->tokens as $token => $argument) {
       if (isset($tokens[$token])) {
-        unset($tokens);
+        unset($tokens[$token]);
       }
     }
 
