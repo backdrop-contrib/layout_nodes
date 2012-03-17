@@ -12,6 +12,14 @@ body.panels-ipe {
   }
 }
 
+/* Hide the control container when the overlay is open. */
+html.overlay-open #panels-ipe-control-container {
+  display: none !important;
+}
+html.overlay-open body.panels-ipe {
+  margin-top: 0 !important;
+}
+
 div.panels-ipe-handlebar-wrapper {
   border-bottom: 1px solid #CCC;
 }
@@ -99,12 +107,12 @@ div.panels-ipe-draghandle span.panels-ipe-draghandle-icon {
   padding: 0 !important; /* override button defaults */
 }
 
-  span.panels-ipe-draghandle-icon-inner {
-    display: block;
-    width: 34px;
-    height: 34px;
-    background: url(../images/icon-draggable.png) no-repeat 3px 3px;
-  }
+span.panels-ipe-draghandle-icon-inner {
+  display: block;
+  width: 34px;
+  height: 34px;
+  background: url(../images/icon-draggable.png) no-repeat 3px 3px;
+}
 
 div.panels-ipe-placeholder {
   border: 2px dashed #999;
@@ -120,12 +128,12 @@ div.panels-ipe-placeholder {
   word-spacing: 0;
 }
 
-  div.panels-ipe-placeholder h3 {
-    font-weight: normal;
-    font-size: 15px;
-    width: 75px; /* In order to prevent the region title from running into the button, set a width. Initital width only--this will be changed by jQuery */
-    margin: 1.154em 0;
-  }
+div.panels-ipe-placeholder h3 {
+  font-weight: normal;
+  font-size: 15px;
+  width: 75px; /* In order to prevent the region title from running into the button, set a width. Initital width only--this will be changed by jQuery */
+  margin: 1.154em 0;
+}
 
 /* Hide editor-state-on elements initially */
 .panels-ipe-on {
@@ -191,75 +199,75 @@ span.panels-ipe-draghandle-icon {
   box-shadow: 0px 3px 3px 0px #d2d2d2;
 }
 
-  div.panels-ipe-handlebar-wrapper li a {
-    padding: 0 8px  1px;
-  }
+div.panels-ipe-handlebar-wrapper li a {
+  padding: 0 8px  1px;
+}
 
-    div.panels-ipe-handlebar-wrapper li a span {
-      display: block;
-      height: 32px;
-      width: 18px;
-      background-position: center center;
-      background-repeat: no-repeat;
-      text-align: left;
-      text-indent: -9999em;
-      overflow: hidden;
-    }
+div.panels-ipe-handlebar-wrapper li a span {
+  display: block;
+  height: 32px;
+  width: 18px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  text-align: left;
+  text-indent: -9999em;
+  overflow: hidden;
+}
 
-    div.panels-ipe-handlebar-wrapper li.edit a span {
-      background-image: url(../images/icon-settings.png);
-    }
+div.panels-ipe-handlebar-wrapper li.edit a span {
+  background-image: url(../images/icon-settings.png);
+}
 
-    div.panels-ipe-handlebar-wrapper li.style a span {
-      background-image: url(../images/icon-style.png);
-    }
+div.panels-ipe-handlebar-wrapper li.style a span {
+  background-image: url(../images/icon-style.png);
+}
 
-    div.panels-ipe-handlebar-wrapper li.delete a span {
-      background-image: url(../images/icon-delete.png);
-    }
+div.panels-ipe-handlebar-wrapper li.delete a span {
+  background-image: url(../images/icon-delete.png);
+}
 
 
-  div.panels-ipe-handlebar-wrapper li a:hover,
-  div.panels-ipe-dragtitle span:hover,
-  div.panels-ipe-newblock a:hover,
-  span.panels-ipe-draghandle-icon:hover {
-    background: #E6E6E6;
-    background-image: linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
-    background-image: -o-linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
-    background-image: -moz-linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
-    background-image: -webkit-linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
-    background-image: -ms-linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
-    background-image: -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #C5C5C5),
-      color-stop(1, #FAFAFA)
-    );
-  }
+div.panels-ipe-handlebar-wrapper li a:hover,
+div.panels-ipe-dragtitle span:hover,
+div.panels-ipe-newblock a:hover,
+span.panels-ipe-draghandle-icon:hover {
+  background: #E6E6E6;
+  background-image: linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
+  background-image: -o-linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
+  background-image: -moz-linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
+  background-image: -webkit-linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
+  background-image: -ms-linear-gradient(bottom, #C5C5C5 0%, #FAFAFA 100%);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #C5C5C5),
+    color-stop(1, #FAFAFA)
+  );
+}
 
-  div.panels-ipe-handlebar-wrapper li a:active,
-  div.panels-ipe-dragtitle span:active,
-  div.panels-ipe-newblock a:active,
-  span.panels-ipe-draghandle-icon:active {
-    outline: none;
-    background-image: linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
-    background-image: -o-linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
-    background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
-    background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
-    background-image: -ms-linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
-    background-image: -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #FFFFFF),
-      color-stop(1, #E9EAEC)
-    );
+div.panels-ipe-handlebar-wrapper li a:active,
+div.panels-ipe-dragtitle span:active,
+div.panels-ipe-newblock a:active,
+span.panels-ipe-draghandle-icon:active {
+  outline: none;
+  background-image: linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
+  background-image: -o-linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
+  background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
+  background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
+  background-image: -ms-linear-gradient(bottom, #FFFFFF 0%, #E9EAEC 100%);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #FFFFFF),
+    color-stop(1, #E9EAEC)
+  );
 
-    -webkit-box-shadow: 0px 0px 0px 0px #fff;
-    -moz-box-shadow: 0px 0px 0px 0px #fff;
-    box-shadow: 0px 0px 0px 0px #fff;
-  }
+  -webkit-box-shadow: 0px 0px 0px 0px #fff;
+  -moz-box-shadow: 0px 0px 0px 0px #fff;
+  box-shadow: 0px 0px 0px 0px #fff;
+}
 
 .panels-ipe-editing .panels-ipe-portlet-content {
   margin: 10px 3px;
@@ -357,178 +365,178 @@ div.panels-ipe-control .form-submit {
   margin: 0 10px;
 }
 
-  div.panels-ipe-control .form-submit {
-    padding: 0 0.8em 2px 34px;
-  }
+div.panels-ipe-control .form-submit {
+  padding: 0 0.8em 2px 34px;
+}
 
-    input#panels-ipe-save, input#panels-ipe-cancel,
-    input#panels-ipe-save:hover, input#panels-ipe-cancel:hover,
-    input#panels-ipe-save:active, input#panels-ipe-cancel:active {
-      background-repeat: no-repeat;
-    }
+input#panels-ipe-save, input#panels-ipe-cancel,
+input#panels-ipe-save:hover, input#panels-ipe-cancel:hover,
+input#panels-ipe-save:active, input#panels-ipe-cancel:active {
+  background-repeat: no-repeat;
+}
 
-  div.panels-ipe-pseudobutton-container a {
-    height: 33px;
-    padding: 0 0.8em;
-    display: inline-block;
-    color: #CCC;
-    text-decoration: none;
-  }
+div.panels-ipe-pseudobutton-container a {
+  height: 33px;
+  padding: 0 0.8em;
+  display: inline-block;
+  color: #CCC;
+  text-decoration: none;
+}
 
-  input#panels-ipe-save {
-    background-image: url(../images/icon-save.png);
-    background-image: url(../images/icon-save.png), linear-gradient(bottom, #383838 0%, #666666 100%);
-    background-image: url(../images/icon-save.png), -o-linear-gradient(bottom, #383838 0%, #666666 100%);
-    background-image: url(../images/icon-save.png), -moz-linear-gradient(bottom, #383838 0%, #666666 100%);
-    background-image: url(../images/icon-save.png), -webkit-linear-gradient(bottom, #383838 0%, #666666 100%);
-    background-image: url(../images/icon-save.png), -ms-linear-gradient(bottom, #383838 0%, #666666 100%);
+input#panels-ipe-save {
+  background-image: url(../images/icon-save.png);
+  background-image: url(../images/icon-save.png), linear-gradient(bottom, #383838 0%, #666666 100%);
+  background-image: url(../images/icon-save.png), -o-linear-gradient(bottom, #383838 0%, #666666 100%);
+  background-image: url(../images/icon-save.png), -moz-linear-gradient(bottom, #383838 0%, #666666 100%);
+  background-image: url(../images/icon-save.png), -webkit-linear-gradient(bottom, #383838 0%, #666666 100%);
+  background-image: url(../images/icon-save.png), -ms-linear-gradient(bottom, #383838 0%, #666666 100%);
 
-    background-image: url(../images/icon-save.png), -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #383838),
-      color-stop(1, #666666)
-    );
-  }
+  background-image: url(../images/icon-save.png), -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #383838),
+    color-stop(1, #666666)
+  );
+}
 
-  input#panels-ipe-cancel {
-    background-image: url(../images/icon-close.png);
-    background-image: url(../images/icon-close.png), linear-gradient(bottom, #383838 0%, #666666 100%);
-    background-image: url(../images/icon-close.png), -o-linear-gradient(bottom, #383838 0%, #666666 100%);
-    background-image: url(../images/icon-close.png), -moz-linear-gradient(bottom, #383838 0%, #666666 100%);
-    background-image: url(../images/icon-close.png), -webkit-linear-gradient(bottom, #383838 0%, #666666 100%);
-    background-image: url(../images/icon-close.png), -ms-linear-gradient(bottom, #383838 0%, #666666 100%);
+input#panels-ipe-cancel {
+  background-image: url(../images/icon-close.png);
+  background-image: url(../images/icon-close.png), linear-gradient(bottom, #383838 0%, #666666 100%);
+  background-image: url(../images/icon-close.png), -o-linear-gradient(bottom, #383838 0%, #666666 100%);
+  background-image: url(../images/icon-close.png), -moz-linear-gradient(bottom, #383838 0%, #666666 100%);
+  background-image: url(../images/icon-close.png), -webkit-linear-gradient(bottom, #383838 0%, #666666 100%);
+  background-image: url(../images/icon-close.png), -ms-linear-gradient(bottom, #383838 0%, #666666 100%);
 
-    background-image: url(../images/icon-close.png), -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #383838),
-      color-stop(1, #666666)
-    );
-  }
+  background-image: url(../images/icon-close.png), -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #383838),
+    color-stop(1, #666666)
+  );
+}
 
-  div.panels-ipe-pseudobutton-container:hover,
-  div.panels-ipe-control .form-submit:hover {
-    background: #999999;
-    background-image: linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: -o-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: -moz-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: -webkit-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: -ms-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #3D3D3D),
-      color-stop(1, #999999)
-    );
+div.panels-ipe-pseudobutton-container:hover,
+div.panels-ipe-control .form-submit:hover {
+  background: #999999;
+  background-image: linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: -o-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: -moz-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: -webkit-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: -ms-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #3D3D3D),
+    color-stop(1, #999999)
+  );
 
-    color: #FFF;
-  }
+  color: #FFF;
+}
 
-  div.panels-ipe-pseudobutton-container a:hover {
-    color: #FFF;
-  }
+div.panels-ipe-pseudobutton-container a:hover {
+  color: #FFF;
+}
 
-  input#panels-ipe-cancel:hover {
-    background-image: url(../images/icon-close.png), linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: url(../images/icon-close.png), -o-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: url(../images/icon-close.png), -moz-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: url(../images/icon-close.png), -webkit-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: url(../images/icon-close.png), -ms-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+input#panels-ipe-cancel:hover {
+  background-image: url(../images/icon-close.png), linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: url(../images/icon-close.png), -o-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: url(../images/icon-close.png), -moz-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: url(../images/icon-close.png), -webkit-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: url(../images/icon-close.png), -ms-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
 
-    background-image: url(../images/icon-close.png), -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #3D3D3D),
-      color-stop(1, #999999)
-    );
-  }
+  background-image: url(../images/icon-close.png), -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #3D3D3D),
+    color-stop(1, #999999)
+  );
+}
 
-  input#panels-ipe-save:hover {
-    background-image: url(../images/icon-save.png), linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: url(../images/icon-save.png), -o-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: url(../images/icon-save.png), -moz-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: url(../images/icon-save.png), -webkit-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
-    background-image: url(../images/icon-save.png), -ms-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+input#panels-ipe-save:hover {
+  background-image: url(../images/icon-save.png), linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: url(../images/icon-save.png), -o-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: url(../images/icon-save.png), -moz-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: url(../images/icon-save.png), -webkit-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
+  background-image: url(../images/icon-save.png), -ms-linear-gradient(bottom, #3D3D3D 0%, #999999 100%);
 
-    background-image: url(../images/icon-save.png), -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #3D3D3D),
-      color-stop(1, #999999)
-    );
-  }
+  background-image: url(../images/icon-save.png), -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #3D3D3D),
+    color-stop(1, #999999)
+  );
+}
 
-  div.panels-ipe-pseudobutton-container:active,
-  div.panels-ipe-control .form-submit:active {
-    background: #333;
-    background-image: linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: -o-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: -moz-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: -webkit-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: -ms-linear-gradient(bottom, #616161 0%, #333333 100%);
+div.panels-ipe-pseudobutton-container:active,
+div.panels-ipe-control .form-submit:active {
+  background: #333;
+  background-image: linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: -o-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: -moz-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: -webkit-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: -ms-linear-gradient(bottom, #616161 0%, #333333 100%);
 
-    background-image: -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #616161),
-      color-stop(1, #333333)
-    );
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #616161),
+    color-stop(1, #333333)
+  );
 
-    color: #CCC;
-  }
+  color: #CCC;
+}
 
-  div.panels-ipe-pseudobutton-container a:active {
-    color: #CCC;
-  }
+div.panels-ipe-pseudobutton-container a:active {
+  color: #CCC;
+}
 
-  input#panels-ipe-cancel:active {
-    background-image: url(../images/icon-close.png), linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: url(../images/icon-close.png), -o-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: url(../images/icon-close.png), -moz-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: url(../images/icon-close.png), -webkit-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: url(../images/icon-close.png), -ms-linear-gradient(bottom, #616161 0%, #333333 100%);
+input#panels-ipe-cancel:active {
+  background-image: url(../images/icon-close.png), linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: url(../images/icon-close.png), -o-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: url(../images/icon-close.png), -moz-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: url(../images/icon-close.png), -webkit-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: url(../images/icon-close.png), -ms-linear-gradient(bottom, #616161 0%, #333333 100%);
 
-    background-image: url(../images/icon-close.png), -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #616161),
-      color-stop(1, #333333)
-    );
-  }
+  background-image: url(../images/icon-close.png), -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #616161),
+    color-stop(1, #333333)
+  );
+}
 
-  input#panels-ipe-save:active {
-    background-image: url(../images/icon-save.png), linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: url(../images/icon-save.png), -o-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: url(../images/icon-save.png), -moz-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: url(../images/icon-save.png), -webkit-linear-gradient(bottom, #616161 0%, #333333 100%);
-    background-image: url(../images/icon-save.png), -ms-linear-gradient(bottom, #616161 0%, #333333 100%);
+input#panels-ipe-save:active {
+  background-image: url(../images/icon-save.png), linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: url(../images/icon-save.png), -o-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: url(../images/icon-save.png), -moz-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: url(../images/icon-save.png), -webkit-linear-gradient(bottom, #616161 0%, #333333 100%);
+  background-image: url(../images/icon-save.png), -ms-linear-gradient(bottom, #616161 0%, #333333 100%);
 
-    background-image: url(../images/icon-save.png), -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      color-stop(0, #616161),
-      color-stop(1, #333333)
-    );
-  }
+  background-image: url(../images/icon-save.png), -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #616161),
+    color-stop(1, #333333)
+  );
+}
 
-  div.panels-ipe-pseudobutton-container a.panels-ipe-startedit {
-    padding-left: 34px;
-    background: url(../images/icon-configure.png) no-repeat 10px 9px;
-  }
+div.panels-ipe-pseudobutton-container a.panels-ipe-startedit {
+  padding-left: 34px;
+  background: url(../images/icon-configure.png) no-repeat 10px 9px;
+}
 
-  div.panels-ipe-pseudobutton-container a.panels-ipe-change-layout {
-    padding-left: 34px;
-    background: url(../images/icon-change-layout.png) no-repeat 10px 9px;
-  }
+div.panels-ipe-pseudobutton-container a.panels-ipe-change-layout {
+  padding-left: 34px;
+  background: url(../images/icon-change-layout.png) no-repeat 10px 9px;
+}
 
 div.panels-ipe-button-container {
   margin: 0.3em 0.5em;
