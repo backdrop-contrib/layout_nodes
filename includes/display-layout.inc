@@ -245,6 +245,7 @@ function panels_change_layout($form, &$form_state) {
     'no buttons' => TRUE,
     'no preview' => TRUE,
     'no display settings' => TRUE,
+    'display_title' => '',
   );
 
   ctools_include('display-edit', 'panels');
