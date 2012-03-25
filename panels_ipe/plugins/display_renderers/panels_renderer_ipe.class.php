@@ -60,9 +60,9 @@ class panels_renderer_ipe extends panels_renderer_editor {
       '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
       '#suffix' => '</div>',
       );
-    }
 
-    panels_ipe_toolbar_add_button($this->clean_key, 'panels-ipe-change-layout', $button);
+      panels_ipe_toolbar_add_button($this->clean_key, 'panels-ipe-change-layout', $button);
+    }
 
     ctools_include('ajax');
     ctools_include('modal');
