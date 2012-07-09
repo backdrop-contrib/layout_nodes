@@ -269,6 +269,11 @@ class panels_renderer_ipe extends panels_renderer_editor {
       panels_edit_cache_clear($this->cache);
     }
 
+    // Reset the $_POST['ajax_html_ids'] values to preserve
+    // proper IDs on form elements when they are rebuilt
+    // by the Panels IPE without refreshing the page
+    $_POST['ajax_html_ids'] = array();
+
     $this->commands[] = array(
       'command' => 'endIPE',
       'key' => $this->clean_key,

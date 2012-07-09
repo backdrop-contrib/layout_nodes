@@ -178,6 +178,9 @@ function panels_choose_layout_submit($form, &$form_state) {
 function panels_change_layout($form, &$form_state) {
   // Provide a temporary display and renderer.
   $form_state['layout_display'] = $display = panels_new_display();
+  if (isset($form_state['cache_key'])) {
+    $display->cache_key = $form_state['cache_key'];
+  }
 
   $new_layout = panels_get_layout($form_state['layout']);
   $new_layout_regions = panels_get_regions($new_layout, $display);
