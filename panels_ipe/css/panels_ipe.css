@@ -74,6 +74,7 @@ div.panels-ipe-handlebar-wrapper ul {
 div.panels-ipe-handlebar-wrapper li {
   background: none;
   list-style-type: none;
+  list-style-image: none;
   margin: 0 .5em 0 0;
   padding: 0;
   float: left;
