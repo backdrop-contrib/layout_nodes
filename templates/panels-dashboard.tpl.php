@@ -1,6 +1,6 @@
 <?php
 ?>
-<div class="panels-dashboard">
+<div class="panels-dashboard clearfix">
   <div class="dashboard-left clearfix">
     <?php print $left; ?>
   </div>
