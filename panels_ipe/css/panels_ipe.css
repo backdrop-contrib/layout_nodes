@@ -204,7 +204,8 @@ div.panels-ipe-handlebar-wrapper li a {
   padding: 0 8px  1px;
 }
 
-div.panels-ipe-handlebar-wrapper li a span {
+div.panels-ipe-handlebar-wrapper li a span,
+div.panels-ipe-newblock a span {
   display: block;
   height: 32px;
   width: 18px;
@@ -212,14 +213,14 @@ div.panels-ipe-handlebar-wrapper li a span {
   background-repeat: no-repeat;
   text-align: left;
   text-indent: -9999em;
-  overflow: hidden;
 }
 
 div.panels-ipe-handlebar-wrapper li.edit a span {
   background-image: url(../images/icon-settings.png);
 }
 
-div.panels-ipe-handlebar-wrapper li.style a span {
+div.panels-ipe-handlebar-wrapper li.style a span,
+div.panels-ipe-newblock a.style span {
   background-image: url(../images/icon-style.png);
 }
 

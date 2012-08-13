@@ -149,6 +149,18 @@ function theme_panels_ipe_add_pane_button($vars) {
 
   $attributes = array('class' => 'ctools-use-modal');
   $link = l(t('Add new pane'), $renderer->get_url('select-content', $region_id), array('attributes' => $attributes));
+
+  // Add option to configure style in IPE
+  if (user_access('administer panels styles')) {
+    $link .= ' ' . l('<span>' . t('Region style') . '</span>', $renderer->get_url('style-type', 'region', $region_id), array(
+      'attributes' => array(
+        'class' => array('ctools-use-modal', 'style'),
+        'title' => t('Region style'),
+      ),
+      'html' => TRUE,
+    ));
+  }
+
   return '<div class="panels-ipe-newblock panels-ipe-on">' . $link . '</div>';
 }
 
