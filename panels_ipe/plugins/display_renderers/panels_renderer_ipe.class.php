@@ -221,6 +221,11 @@ class panels_renderer_ipe extends panels_renderer_editor {
       return;
     }
 
+    // Reset the $_POST['ajax_html_ids'] values to preserve
+    // proper IDs on form elements when they are rebuilt
+    // by the Panels IPE without refreshing the page
+    $_POST['ajax_html_ids'] = array();
+
     $form_state = array(
       'display' => &$this->display,
       'content_types' => $this->cache->content_types,
@@ -268,11 +273,6 @@ class panels_renderer_ipe extends panels_renderer_editor {
       // Cancelled. Clear the cache.
       panels_edit_cache_clear($this->cache);
     }
-
-    // Reset the $_POST['ajax_html_ids'] values to preserve
-    // proper IDs on form elements when they are rebuilt
-    // by the Panels IPE without refreshing the page
-    $_POST['ajax_html_ids'] = array();
 
     $this->commands[] = array(
       'command' => 'endIPE',
