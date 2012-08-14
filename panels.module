@@ -1220,6 +1220,11 @@ function template_preprocess_panels_pane(&$vars) {
       );
       unset($content->content['#contextual_links']);
 
+      // Add content to $element array
+      if (is_array($content->content)) {
+        $element['#element'] = $content->content;
+      }
+
       $element = contextual_pre_render_links($element);
       $links += $element['#links'];
     }
