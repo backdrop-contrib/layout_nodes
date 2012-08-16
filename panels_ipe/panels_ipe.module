@@ -146,9 +146,7 @@ function theme_panels_ipe_add_pane_button($vars) {
   $region_id = $vars['region_id'];
   $display = $vars['display'];
   $renderer = $vars['renderer'];
-
-  $attributes = array('class' =>array('ctools-use-modal', 'panels-ipe-hide-bar'));
-  $link = l(t('Add new pane'), $renderer->get_url('select-content', $region_id), array('attributes' => $attributes));
+  $link = '';
 
   // Add option to configure style in IPE
   if (user_access('administer panels styles')) {
@@ -160,6 +158,15 @@ function theme_panels_ipe_add_pane_button($vars) {
       'html' => TRUE,
     ));
   }
+
+  // Add option to add items in the IPE
+  $link .= ' ' . l('<span>' . t('Add new pane') . '</span>', $renderer->get_url('select-content', $region_id), array(
+      'attributes' => array(
+        'class' => array('ctools-use-modal', 'add'),
+        'title' => t('Add new pane'),
+      ),
+      'html' => TRUE,
+  ));
 
   return '<div class="panels-ipe-newblock panels-ipe-on">' . $link . '</div>';
 }
