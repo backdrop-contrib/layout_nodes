@@ -89,7 +89,7 @@ function theme_panels_ipe_pane_wrapper($vars) {
       'href' => $renderer->get_url('edit-pane', $pane->pid),
       'html' => TRUE,
       'attributes' => array(
-        'class' => 'ctools-use-modal',
+        'class' => array('ctools-use-modal', 'panels-ipe-hide-bar'),
         'title' => isset($content_type['edit text']) ? $content_type['edit text'] : t('Settings'),
         // 'id' => "pane-edit-panel-pane-$pane->pid",
       ),
@@ -103,7 +103,7 @@ function theme_panels_ipe_pane_wrapper($vars) {
       'href' => $renderer->get_url('style-type', 'pane', $pane->pid),
       'html' => TRUE,
       'attributes' => array(
-        'class' => array('ctools-use-modal'),
+        'class' => array('ctools-use-modal', 'panels-ipe-hide-bar'),
         'title' => t('Style'),
       ),
     );
@@ -147,14 +147,14 @@ function theme_panels_ipe_add_pane_button($vars) {
   $display = $vars['display'];
   $renderer = $vars['renderer'];
 
-  $attributes = array('class' => 'ctools-use-modal');
+  $attributes = array('class' =>array('ctools-use-modal', 'panels-ipe-hide-bar'));
   $link = l(t('Add new pane'), $renderer->get_url('select-content', $region_id), array('attributes' => $attributes));
 
   // Add option to configure style in IPE
   if (user_access('administer panels styles')) {
     $link .= ' ' . l('<span>' . t('Region style') . '</span>', $renderer->get_url('style-type', 'region', $region_id), array(
       'attributes' => array(
-        'class' => array('ctools-use-modal', 'style'),
+        'class' => array('ctools-use-modal', 'style', 'panels-ipe-hide-bar'),
         'title' => t('Region style'),
       ),
       'html' => TRUE,
