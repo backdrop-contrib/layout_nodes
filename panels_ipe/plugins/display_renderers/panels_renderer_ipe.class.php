@@ -163,10 +163,10 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $empty_ph = theme('panels_ipe_placeholder_pane', array('region_id' => $region_id, 'region_title' => $this->plugins['layout']['regions'][$region_id]));
 
     // Wrap the placeholder in some guaranteed markup.
-    $panes['empty_placeholder'] = '<div class="panels-ipe-placeholder panels-ipe-on panels-ipe-portlet-marker panels-ipe-portlet-static">' . $empty_ph . theme('panels_ipe_add_pane_button', array('region_id' => $region_id, 'display' => $this->display, 'renderer' => $this)) . "</div>";
+    $control = '<div class="panels-ipe-placeholder panels-ipe-on panels-ipe-portlet-marker panels-ipe-portlet-static">' . $empty_ph . theme('panels_ipe_add_pane_button', array('region_id' => $region_id, 'display' => $this->display, 'renderer' => $this)) . "</div>";
 
     $output = parent::render_region($region_id, $panes);
-    $output = theme('panels_ipe_region_wrapper', array('output' => $output, 'region_id' => $region_id, 'display' => $this->display, 'renderer' => $this));
+    $output = theme('panels_ipe_region_wrapper', array('output' => $output, 'region_id' => $region_id, 'display' => $this->display, 'controls' => $control, 'renderer' => $this));
     $classes = 'panels-ipe-region';
 
     return "<div id='panels-ipe-regionid-$region_id' class='panels-ipe-region'>$output</div>";

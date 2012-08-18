@@ -39,7 +39,7 @@ function panels_ipe_theme() {
       'variables' => array('output' => NULL, 'pane' => NULL, 'display' => NULL, 'renderer' => NULL),
     ),
     'panels_ipe_region_wrapper' => array(
-      'variables' => array('output' => NULL, 'region_id' => NULL, 'display' => NULL, 'renderer' => NULL),
+      'variables' => array('output' => NULL, 'region_id' => NULL, 'display' => NULL, 'controls' => NULL, 'renderer' => NULL),
     ),
     'panels_ipe_add_pane_button' => array(
       'variables' => array('region_id' => NULL, 'display' => NULL, 'renderer' => NULL),
@@ -139,7 +139,7 @@ function theme_panels_ipe_pane_wrapper($vars) {
 }
 
 function theme_panels_ipe_region_wrapper($vars) {
-  return $vars['output'];
+  return $vars['controls'] . $vars['output'];
 }
 
 function theme_panels_ipe_add_pane_button($vars) {
