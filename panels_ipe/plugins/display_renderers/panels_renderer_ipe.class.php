@@ -329,6 +329,11 @@ class panels_renderer_ipe extends panels_renderer_editor {
       'no_redirect' => TRUE,
     );
 
+    // Reset the $_POST['ajax_html_ids'] values to preserve
+    // proper IDs on form elements when they are rebuilt
+    // by the Panels IPE without refreshing the page
+    $_POST['ajax_html_ids'] = array();
+
     $output = drupal_build_form('panels_change_layout', $form_state);
     $output = drupal_render($output);
     if (!empty($form_state['executed'])) {
