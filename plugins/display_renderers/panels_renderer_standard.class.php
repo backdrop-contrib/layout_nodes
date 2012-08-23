@@ -259,6 +259,10 @@ class panels_renderer_standard {
       }
     }
     $this->prepared['panes'] = $first + $normal + $last;
+
+    // Allow other modules the alter the prepared panes array.
+    drupal_alter('panels_panes_prepared', $this->prepared['panes'], $this);
+
     return $this->prepared['panes'];
   }
 
