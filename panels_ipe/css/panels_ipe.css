@@ -27,6 +27,7 @@ div.panels-ipe-handlebar-wrapper {
 .panels-ipe-editing div.panels-ipe-portlet-wrapper {
   margin-top: 1em;
   border: 1px solid #CCC;
+  width: 100%;
 }
 
 /* Hide empty panes when not editing them. */
