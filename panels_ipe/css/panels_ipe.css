@@ -164,6 +164,10 @@ div.panels-ipe-newblock {
   z-index: 99;
 }
 
+div.panels-ipe-newblock li {
+  padding: 0;
+}
+
 div.panels-ipe-handlebar-wrapper li a,
 div.panels-ipe-dragtitle span,
 div.panels-ipe-newblock a,

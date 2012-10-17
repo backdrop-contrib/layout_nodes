@@ -233,17 +233,6 @@ function DrupalPanelsIPE(cache_key, cfg) {
     ipe.showForm();
     ipe.topParent.addClass('panels-ipe-editing');
 
-    //Reposition the "Add new pane" button
-    $('.panels-ipe-newblock').each(function() {
-      var link_width_half = parseInt($(this).children('a').outerWidth() / 2);
-
-      $(this).css('margin-left', '-' + link_width_half + 'px');
-
-      $(this).css('margin-top', '-' + parseInt($(this).children('a').outerHeight() / 2) + 'px');
-
-      $(this).parents('.panels-ipe-placeholder').find('h3').css('width', parseInt(($(this).parents('.panels-ipe-placeholder').width() / 2) - link_width_half) + 'px');
-    });
-
   };
 
   this.hideContainer = function() {
