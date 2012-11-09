@@ -581,7 +581,7 @@ class panels_renderer_editor extends panels_renderer_standard {
    * @todo -- this should be in CTools.
    */
   function get_category($content_type) {
-    if (isset($content_type['top level'])) {
+    if (!empty($content_type['top level'])) {
       $category = 'root';
     }
     else if (isset($content_type['category'])) {
