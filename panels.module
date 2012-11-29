@@ -308,6 +308,10 @@ function panels_permission() {
       'title' => t('Use panel locks'),
       'description' => t('Allows a user to lock and unlock panes in a panel display.'),
     ),
+    'use ipe with page manager' => array(
+      'title' => t("Use the Panels In-Place Editor with Page Manager"),
+      'description' => t('Allows users with access to the In-Place editor to administer page manager pages. This permission is only needed for users without "use page manager" access.'),
+    ),
   );
 }
 
