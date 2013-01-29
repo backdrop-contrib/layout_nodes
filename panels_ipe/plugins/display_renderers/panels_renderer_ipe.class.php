@@ -444,12 +444,14 @@ function panels_ipe_edit_control_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Save'),
     '#id' => 'panels-ipe-save',
+    '#attributes' => array('class' => array('panels-ipe-save')),
     '#submit' => array('panels_edit_display_form_submit'),
     '#save-display' => TRUE,
   );
   $form['buttons']['cancel'] = array(
     '#type' => 'submit',
     '#id' => 'panels-ipe-cancel',
+    '#attributes' => array('class' => array('panels-ipe-cancel')),
     '#value' => t('Cancel'),
   );
   return $form;
