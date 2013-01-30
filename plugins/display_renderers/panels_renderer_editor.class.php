@@ -153,7 +153,7 @@ class panels_renderer_editor extends panels_renderer_standard {
 
     $output = '<div class="' . $class . '" id="panel-pane-' . $pane->pid . '">';
 
-    if (!$block->title) {
+    if (empty($block->title)) {
       $block->title = t('No title');
     }
 
