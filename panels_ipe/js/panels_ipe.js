@@ -17,7 +17,9 @@ Drupal.PanelsIPE = {
       .click(function() {
         if (confirm('Remove this pane?')) {
           $(this).parents('div.panels-ipe-portlet-wrapper').fadeOut('medium', function() {
+            var $sortable = $(this).closest('.ui-sortable');
             $(this).empty().remove();
+            $sortable.trigger('sortremove');
           });
           $(this).parents('div.panels-ipe-display-container').addClass('changed');
         }
