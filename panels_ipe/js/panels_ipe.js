@@ -354,6 +354,12 @@ $(function() {
     }
   };
 
+  Drupal.ajax.prototype.commands.addNewPane = function(ajax, data, status) {
+    if (Drupal.PanelsIPE.editors[data.key]) {
+      Drupal.PanelsIPE.editors[data.key].changed = true;
+    }
+  };
+
   Drupal.ajax.prototype.commands.cancelIPE = function(ajax, data, status) {
     if (Drupal.PanelsIPE.editors[data.key]) {
       Drupal.PanelsIPE.editors[data.key].cancelIPE();
