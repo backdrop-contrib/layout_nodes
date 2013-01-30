@@ -258,7 +258,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
         'command' => 'initIPE',
         'key' => $this->clean_key,
         'data' => drupal_render($output),
-        'lockPath' => $this->get_url('unlock_ipe'),
+        'lockPath' => url($this->get_url('unlock_ipe')),
       );
       return;
     }
@@ -329,7 +329,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
     $this->commands[] = array(
       'command' => 'IPEsetLockState',
       'key' => $this->clean_key,
-      'lockPath' => $this->get_url('unlock_ipe'),
+      'lockPath' => url($this->get_url('unlock_ipe')),
     );
   }
 
