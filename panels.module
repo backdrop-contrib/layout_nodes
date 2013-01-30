@@ -1280,7 +1280,7 @@ function template_preprocess_panels_pane(&$vars) {
 
   // Add template file suggestion for content type and sub-type.
   $vars['theme_hook_suggestions'][] = $base . $delimiter . $content->type;
-  $vars['theme_hook_suggestions'][] = $base . $delimiter . strtr($content->type, '-', '_') . $delimiter . strtr($content->subtype, '-', '_');
+  $vars['theme_hook_suggestions'][] = $base . $delimiter . strtr(ctools_cleanstring($content->type, array('lower case' => TRUE)), '-', '_') . $delimiter . strtr(ctools_cleanstring($content->subtype, array('lower case' => TRUE)), '-', '_');
 
   $vars['pane_prefix'] = !empty($content->pane_prefix) ? $content->pane_prefix : '';
   $vars['pane_suffix'] = !empty($content->pane_suffix) ? $content->pane_suffix : '';
