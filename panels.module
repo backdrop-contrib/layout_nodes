@@ -1074,6 +1074,9 @@ function panels_render_display(&$display, $renderer = NULL) {
   if (!empty($display->context)) {
     if ($form_context = ctools_context_get_form($display->context)) {
       $form_context->form['#theme'] = 'panels_render_display_form';
+      if (empty($form_context->form['#theme_wrappers']) || !in_array('form', $form_context->form['#theme_wrappers'])) {
+        $form_context['#theme_wrappers'][] = 'form';
+      }
       $form_context->form['#display'] = &$display;
       return $form_context->form;
     }
@@ -1090,10 +1093,7 @@ function panels_render_display(&$display, $renderer = NULL) {
  * then operate as a theme function of the form.
  */
 function theme_panels_render_display_form($vars) {
-  // @todo this is probably broken in D7
-  $render = $vars['element']['#display']->render();
-  $vars['element']['#children'] = $render;
-  return theme('form', $vars);
+  return $vars['element']['#display']->render();
 }
 
 // @layout
