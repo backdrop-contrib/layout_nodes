@@ -1230,7 +1230,9 @@ function template_preprocess_panels_pane(&$vars) {
       }
 
       $element = contextual_pre_render_links($element);
-      $links += $element['#links'];
+      if(!empty($element['#links'])) {
+        $links += $element['#links'];
+      }
     }
 
     if ($links) {
