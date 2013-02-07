@@ -147,6 +147,7 @@ function panels_edit_display_form_validate($form, &$form_state) {
  * the display.
  */
 function panels_edit_display_form_submit($form, &$form_state) {
+  error_log(var_export($form_state['values']['panel']['pane'], 1));
   $display = &$form_state['display'];
 
   $old_content = $display->content;
