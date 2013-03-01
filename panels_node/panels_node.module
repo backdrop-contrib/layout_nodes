@@ -463,7 +463,7 @@ function panels_node_panels_cache_get($nid) {
 }
 
 /**
- * Store a display edit in progress in the page cache.
+ * Store a display edit in progress in the panels cache.
  */
 function panels_node_panels_cache_set($nid, $cache) {
   ctools_include('object-cache');
@@ -471,9 +471,18 @@ function panels_node_panels_cache_set($nid, $cache) {
 }
 
 /**
- * Save all changes made to a display using the Page Manager page cache.
+ * Clear all changes made to a display using the panels cache.
  */
 function panels_node_panels_cache_clear($nid, $cache) {
+  ctools_include('object-cache');
+  ctools_object_cache_clear('panels_node_display_cache', $nid);
+}
+
+/**
+ * React to a cache save and save the display and clear cache.
+ */
+function panels_node_panels_cache_save($nid, $cache) {
+  panels_save_display($cache->display);
   ctools_include('object-cache');
   ctools_object_cache_clear('panels_node_display_cache', $nid);
 }
