@@ -440,7 +440,7 @@ class panels_renderer_standard {
         break;
       case 'inline':
         $url = base_path() . $filename;
-        $this->prefix .= '<link type="text/css" rel="stylesheet" href="' . $url . '" />'."\n";
+        $this->prefix .= '<link type="text/css" rel="stylesheet" href="' . file_create_url($url) . '" />'."\n";
         break;
     }
   }
