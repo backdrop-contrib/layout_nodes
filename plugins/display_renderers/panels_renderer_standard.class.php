@@ -408,16 +408,28 @@ class panels_renderer_standard {
    */
   function add_meta() {
     if (!empty($this->plugins['layout']['css'])) {
-      if (file_exists(path_to_theme() . '/' . $this->plugins['layout']['css'])) {
-        $this->add_css(path_to_theme() . '/' . $this->plugins['layout']['css']);
+      $css = $this->plugins['layout']['css'];
+      if (!is_array($css)) {
+        $css = array($css);
       }
-      else {
-        $this->add_css($this->plugins['layout']['path'] . '/' . $this->plugins['layout']['css']);
+      foreach($css as $file) {
+        if (file_exists(path_to_theme() . '/' . $file)) {
+          $this->add_css(path_to_theme() . '/' . $file);
+        }
+        else {
+          $this->add_css($this->plugins['layout']['path'] . '/' . $file);
+        }
       }
     }
 
     if ($this->admin && isset($this->plugins['layout']['admin css'])) {
-      $this->add_css($this->plugins['layout']['path'] . '/' . $this->plugins['layout']['admin css']);
+      $admin_css = $this->plugins['layout']['admin css'];
+      if (!is_array($admin_css)) {
+        $admin_css = array($admin_css);
+      }
+      foreach($admin_css as $file) {
+        $this->add_css($this->plugins['layout']['path'] . '/' . $file);
+      }
     }
   }
 
