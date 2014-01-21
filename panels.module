@@ -917,8 +917,10 @@ function panels_save_display(&$display) {
       drupal_write_record('panels_pane', $pane, is_numeric($pid) ? array('pid') : array());
 
       if ($pane->pid != $old_pid) {
-        // and put it back so our pids and positions can be used
-        unset($display->content[$id]);
+        // Remove the old new-* entry from the displays content.
+        unset($display->content[$pid]);
+
+        // and put it back so our pids and positions can be used.
         $display->content[$pane->pid] = $pane;
 
         // If the title pane was one of our panes that just got its ID changed,
