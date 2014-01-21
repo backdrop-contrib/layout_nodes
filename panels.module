@@ -258,7 +258,6 @@ function panels_init() {
   }
 
   ctools_add_css('panels', 'panels');
-  ctools_add_js('panels', 'panels');
 }
 
 /**
