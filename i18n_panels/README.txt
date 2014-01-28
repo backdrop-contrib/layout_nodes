@@ -6,12 +6,9 @@ You can now define translatable settings which will be registered in i18n.
 Out of the box the module extends the custom content content_type to allow
 translation of the content.
 
-Attention: Currently this module needs a patched panels version.
-Please apply the patches included in this module or visit:
-Additional hooks: http://drupal.org/node/1179034#comment-5664050
-UUID support: http://drupal.org/node/1277908#comment-5667824
-
-
+Requirements:
+   Ctools 7.x-1.x-dev (Jan 28-2014 or newer)
+   Panels 7.x-3.x-dev (Jan 28-2014 or newer)
 
 Plugin definition extension:
 ------------------------------

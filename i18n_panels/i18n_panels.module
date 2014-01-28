@@ -429,5 +429,14 @@ function _18n_panels_fetch_all_panel_displays($reset = FALSE) {
       }
     }
   }
+
+  // Fetch panelizer displays.
+  if (module_exists('panelizer')) {
+    // Fetch all default handlers.
+    $panelizer_defaults = ctools_export_crud_load_all('panelizer_defaults');
+    foreach ($panelizer_defaults as $panelizer_default) {
+      $displays['exported-' . $panelizer_default->display->uuid] = $panelizer_default->display;
+    }
+  }
   return $displays;
 }
