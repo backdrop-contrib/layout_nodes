@@ -544,7 +544,6 @@ class panels_renderer_standard {
       $this->display->context = array();
     }
 
-    $content = FALSE;
     $caching = !empty($pane->cache['method']) && empty($this->display->skip_cache);
     if ($caching && ($cache = panels_get_cached_content($this->display, $this->display->args, $this->display->context, $pane))) {
       $content = $cache->content;
@@ -558,10 +557,6 @@ class panels_renderer_standard {
 
       $content = ctools_content_render($pane->type, $pane->subtype, $pane->configuration, array(), $this->display->args, $this->display->context);
 
-      if (empty($content)) {
-        return;
-      }
-
       foreach (module_implements('panels_pane_content_alter') as $module) {
         $function = $module . '_panels_pane_content_alter';
         $function($content, $pane, $this->display->args, $this->display->context, $this, $this->display);
@@ -573,14 +568,17 @@ class panels_renderer_standard {
       }
     }
 
-    // Pass long the css_id that is usually available.
-    if (!empty($pane->css['css_id'])) {
-      $content->css_id = check_plain($pane->css['css_id']);
-    }
+    // If there's content, check if we've css configuration to add.
+    if (!empty($content)) {
+      // Pass long the css_id that is usually available.
+      if (!empty($pane->css['css_id'])) {
+        $content->css_id = check_plain($pane->css['css_id']);
+      }
 
-    // Pass long the css_class that is usually available.
-    if (!empty($pane->css['css_class'])) {
-      $content->css_class = check_plain($pane->css['css_class']);
+      // Pass long the css_class that is usually available.
+      if (!empty($pane->css['css_class'])) {
+        $content->css_class = check_plain($pane->css['css_class']);
+      }
     }
 
     return $content;
