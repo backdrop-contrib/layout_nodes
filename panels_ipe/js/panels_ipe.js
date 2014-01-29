@@ -330,9 +330,6 @@ function DrupalPanelsIPE(cache_key, cfg) {
       $('div.panels-ipe-portlet-static', this).each(function() {
         $(this).prependTo($(this).parent().parent());
       });
-
-      // Also remove the last panel separator.
-      $('div.panel-separator', this).filter(':last').remove();
     });
   }
 
