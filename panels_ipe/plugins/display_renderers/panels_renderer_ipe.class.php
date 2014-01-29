@@ -70,9 +70,12 @@ class panels_renderer_ipe extends panels_renderer_editor {
 
     ctools_add_css('panels_dnd', 'panels');
     ctools_add_css('panels_admin', 'panels');
-    ctools_add_js('panels_ipe', 'panels_ipe');
     ctools_add_css('panels_ipe', 'panels_ipe');
 
+    // Add the JavaScript for the IPE. This must go as early as possible so
+    // that its behaviors run first, allowing it to clone parts of the DOM
+    // before other behaviors have been applied to them.
+    drupal_add_js(drupal_get_path('module', 'panels_ipe') . '/js/panels_ipe.js', array('group' => JS_LIBRARY, 'weight' => -1000));
     drupal_add_js(array('PanelsIPECacheKeys' => array($this->clean_key)), 'setting');
 
     drupal_add_library('system', 'ui.draggable');

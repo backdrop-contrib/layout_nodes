@@ -70,6 +70,10 @@ function DrupalPanelsIPE(cache_key, cfg) {
   this.container = $('#panels-ipe-control-container');
   this.control = $('div#panels-ipe-control-' + cache_key);
   this.initButton = $('div.panels-ipe-startedit', this.control);
+  this.topParent = $('div#panels-ipe-display-' + cache_key);
+  // Make a backup of the display (and all its attached event handlers) for use
+  // in the cancelIPE() method.
+  this.backup = this.topParent.clone(true);
   this.cfg = cfg;
   this.changed = false;
   this.sortableOptions = $.extend({
@@ -193,13 +197,10 @@ function DrupalPanelsIPE(cache_key, cfg) {
 
   this.initEditing = function(formdata) {
     ipe.editing = true;
-    ipe.topParent = $('div#panels-ipe-display-' + cache_key);
-    ipe.backup = this.topParent.clone();
+    ipe.changed = false;
 
     // See http://jqueryui.com/demos/sortable/ for details on the configuration
     // parameters used here.
-    ipe.changed = false;
-
     $('div.panels-ipe-sort-container', ipe.topParent).each(ipe.initSorting);
 
     // Since the connectWith option only does a one-way hookup, iterate over
@@ -292,16 +293,36 @@ function DrupalPanelsIPE(cache_key, cfg) {
   this.cancelIPE = function() {
     ipe.hideContainer();
     ipe.topParent.fadeOut('medium', function() {
-      ipe.topParent.replaceWith(ipe.backup.clone());
-      ipe.topParent = $('div#panels-ipe-display-' + ipe.key);
+      // Replace the pane display with the original, unchanged version. Pass
+      // "true" to the clone() method to ensure that we get any event handlers
+      // that were attached to the backup. (Since the Panels IPE JavaScript is
+      // added to the page with a very low weight, we expect its behaviors to
+      // run first, so there shouldn't have been any event handlers that were
+      // added by standard Drupal behaviors before the backup was originally
+      // made. However, it's still a good idea to pass "true" so that we get
+      // any event handlers added by code that ran outside the Drupal behaviors
+      // system.)
+      ipe.topParent.replaceWith(ipe.backup.clone(true));
 
-      // Processing of these things got lost in the cloning, but the classes remained behind.
-      // @todo this isn't ideal but I can't seem to figure out how to keep an unprocessed backup
-      // that will later get processed.
-      $('.ctools-use-modal-processed', ipe.topParent).removeClass('ctools-use-modal-processed');
-      $('.pane-delete-processed', ipe.topParent).removeClass('pane-delete-processed');
+      // Reset the ipe.topParent variable, and display its content.
+      ipe.topParent = $('div#panels-ipe-display-' + ipe.key);
       ipe.topParent.fadeIn('medium');
+
+      // As described above, the backup isn't expected to have many (or any)
+      // event handlers attached to it since it was originally made before
+      // other JavaScript behaviors had a chance to run. So, re-attach
+      // behaviors now to get the full set of event handlers. Note that the
+      // reason we do it this way (rather than the opposite; i.e., rather than
+      // having the Panels IPE behaviors run last so that the backup is made
+      // after all other behaviors have run and all event handlers have already
+      // been attached) is that many event handlers maintain a global state
+      // which contains references to the original object and therefore won't
+      // work correctly on the cloned object.
       Drupal.attachBehaviors();
+
+      // Re-attaching behaviors won't cause this object to be initialized
+      // again, though, so we need to re-initialize it manually.
+      ipe.init();
     });
   };
 
@@ -331,10 +352,17 @@ function DrupalPanelsIPE(cache_key, cfg) {
         $(this).prependTo($(this).parent().parent());
       });
     });
+  };
+
+  /**
+   * Triggers methods that must run when this object is initialized.
+   */
+  this.init = function () {
+    this.createSortContainers();
   }
 
-  this.createSortContainers();
-
+  // Initialize the object.
+  this.init();
 };
 
 $(function() {
