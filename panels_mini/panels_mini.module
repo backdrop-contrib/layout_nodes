@@ -179,6 +179,19 @@ function panels_mini_block_list_alter(&$blocks) {
 }
 
 /**
+ * Implements hook_get_pane_links_alter().
+ */
+function panels_mini_get_pane_links_alter(&$links, $pane, $content_type) {
+  if ($pane->type == 'panels_mini') {
+    $links['top']['edit_panels_mini'] = array(
+      'title' => t('Edit mini panel'),
+      'href' => url('admin/structure/mini-panels/list/' . $pane->subtype . '/edit/content', array('absolute' => TRUE)),
+      'attributes' => array('target' => array('_blank')),
+    );
+  }
+}
+
+/**
  * Statically store all used IDs to ensure all mini panels get a unique id.
  */
 function panels_mini_get_id($name) {
