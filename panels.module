@@ -325,6 +325,13 @@ function panels_permission() {
 //  $legacy->determineStatus();
 //}
 
+/**
+ * Implements hook_flush_caches().
+ */
+function panels_flush_caches() {
+  return array('cache_panels');
+}
+
 // ---------------------------------------------------------------------------
 // CTools hook implementations
 //

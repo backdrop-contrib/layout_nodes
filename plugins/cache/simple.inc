@@ -25,7 +25,7 @@ $plugin = array(
  */
 function panels_simple_cache_get_cache($conf, $display, $args, $contexts, $pane = NULL) {
   $cid = panels_simple_cache_get_id($conf, $display, $args, $contexts, $pane);
-  $cache = cache_get($cid, 'cache');
+  $cache = cache_get($cid, 'cache_panels');
   if (!$cache) {
     return FALSE;
   }
@@ -42,7 +42,7 @@ function panels_simple_cache_get_cache($conf, $display, $args, $contexts, $pane 
  */
 function panels_simple_cache_set_cache($conf, $content, $display, $args, $contexts, $pane = NULL) {
   $cid = panels_simple_cache_get_id($conf, $display, $args, $contexts, $pane);
-  cache_set($cid, $content);
+  cache_set($cid, $content, 'cache_panels');
 }
 
 /**
@@ -71,7 +71,7 @@ function panels_simple_cache_clear_cache($display) {
     $cid .= ':' . $display->did;
   }
 
-  cache_clear_all($cid, 'cache', TRUE);
+  cache_clear_all($cid, 'cache_panels', TRUE);
 }
 
 /**

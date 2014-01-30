@@ -351,6 +351,8 @@ function panels_schema_3() {
     'primary key' => array('lid'),
   );
 
+  $schema['cache_panels'] = drupal_get_schema_unprocessed('system', 'cache');
+
   return $schema;
 }
 
@@ -463,4 +465,15 @@ function panels_update_7302() {
   }
 
   return implode("\n", $msg);
+}
+
+/**
+ * Add a custom cache table for Panels.
+ */
+function panels_update_7303() {
+  $table_name = 'cache_panels';
+  if (!db_table_exists($table_name)) {
+    $schema = drupal_get_schema_unprocessed('system', 'cache');
+    db_create_table($table_name, $schema);
+  }
 }
