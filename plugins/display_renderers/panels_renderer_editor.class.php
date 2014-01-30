@@ -641,7 +641,19 @@ class panels_renderer_editor extends panels_renderer_standard {
     $content_type = ctools_get_content_type($type_name);
     $subtype = ctools_content_get_subtype($content_type, $subtype_name);
 
-    if (!isset($step) || !isset($this->cache->new_pane)) {
+    // Determine if we are adding a different pane than previously cached. This
+    // is used to load the different pane into cache so that multistep forms
+    // have the correct context instead of a previously cached version that
+    // does not match the pane currently being added.
+    $is_different_pane = FALSE;
+    if (isset($this->cache) && isset($this->cache->new_pane)) {
+      $diff_type = $type_name != $this->cache->new_pane->type;
+      $diff_subtype = $subtype_name != $this->cache->new_pane->subtype;
+
+      $is_different_pane = $diff_type || $diff_subtype;
+    }
+
+    if (!isset($step) || !isset($this->cache->new_pane) || $is_different_pane) {
       $pane = panels_new_pane($type_name, $subtype_name, TRUE);
       $this->cache->new_pane = &$pane;
     }
