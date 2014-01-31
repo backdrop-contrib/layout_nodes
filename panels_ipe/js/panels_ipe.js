@@ -269,7 +269,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
     $('div.panels-ipe-on').hide();
 
     $('.panels-ipe-editing').removeClass('panels-ipe-editing');
-    $('div.panels-ipe-sort-container', ipe.topParent).sortable("destroy");
+    $('div.panels-ipe-sort-container.ui-sortable', ipe.topParent).sortable("destroy");
   };
 
   this.saveEditing = function() {
