@@ -1162,7 +1162,12 @@ class panels_renderer_editor extends panels_renderer_standard {
 
     // Copy settings from form state back into the cache.
     if(!empty($form_state['values']['settings'])) {
-      $this->cache->display->content[$pid]->style['settings'] = $form_state['values']['settings'];
+      if ($type == 'pane') {
+        $this->cache->display->content[$pid]->style['settings'] = $form_state['values']['settings'];
+      }
+      else if($type == 'region') {
+        $this->cache->display->panel_settings['style_settings'][$pid] = $form_state['values']['settings'];
+      }
     }
 
     panels_edit_cache_set($this->cache);
