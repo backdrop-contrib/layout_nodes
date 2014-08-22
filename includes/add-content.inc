@@ -80,4 +80,7 @@ function template_preprocess_panels_add_content_link(&$vars) {
   $subtype_class = 'add-content-link-' . str_replace('_', '-', $vars['content_type']['subtype_name']);
   $vars['image_button'] = ctools_ajax_image_button($vars['icon'], $vars['url'], $vars['description'], $subtype_class . '-image-button panels-modal-add-config');
   $vars['text_button'] = ctools_ajax_text_button($vars['title'], $vars['url'], $vars['description'], $subtype_class . '-text-button panels-modal-add-config');
+  if (function_exists('ctools_ajax_icon_text_button')) {
+    $vars['icon_text_button'] = ctools_ajax_icon_text_button($vars['title'], $vars['icon'], $vars['url'], $vars['description'], $subtype_class . '-icon-text-button panels-modal-add-config');
+  }
 }
