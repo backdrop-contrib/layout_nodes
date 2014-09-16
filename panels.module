@@ -269,7 +269,7 @@ function panels_permission() {
   return array(
     'use panels dashboard' => array(
       'title' => t("Use Panels Dashboard"),
-      'description' => t("Allows a user to access the !link.", array('!link' => l('Panels Dashboard', 'admin/structure/panels'))),
+      'description' => t('Allows a user to access the <a href="@url">Panels Dashboard</a>.', array('@url' => url('admin/structure/panels'))),
     ),
     'view pane admin links' => array( // @todo
       'title' => t("View administrative links on Panel panes"),
