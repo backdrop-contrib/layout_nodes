@@ -1774,6 +1774,33 @@ function _panels_builder_filter($layout) {
   return empty($layout['builder']);
 }
 
+/**
+ * Implements hook_get_pane_links_alter().
+ *
+ * add an Edit block link for custom blocks to the Panels pane links menu
+ */
+function panels_get_pane_links_alter(&$links, $pane, $content_type) {
+  if ($pane->type === "block"){
+    $name_of_block = "";
+    $prefixed_name = $pane->subtype;
+
+    // breakup the subtype string
+    $exploded_subtype = explode('-', $pane->subtype);
+
+    // contains view- or block-
+    $subtype_prefix = $exploded_subtype[0] . '-';
+
+    // remove the prefix to get the name
+    $name_of_block = ltrim( $prefixed_name, $subtype_prefix);
+
+    $links['top']['edit_custom_content'] = array(
+      'title' => t('Edit block'),
+      'href' => url('admin/structure/block/manage/block/' . $name_of_block . '/configure', array('absolute' => TRUE)),
+      'attributes' => array('target' => array('_blank')),
+    );
+  }
+}
+
 // --------------------------------------------------------------------------
 // Deprecated functions
 //
