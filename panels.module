@@ -788,6 +788,7 @@ function panels_new_pane($type, $subtype, $set_defaults = FALSE) {
     $content_subtype = ctools_content_get_subtype($content_type, $subtype);
     $pane->configuration = ctools_content_get_defaults($content_type, $content_subtype);
   }
+  drupal_alter('panels_new_pane', $pane);
 
   return $pane;
 }
