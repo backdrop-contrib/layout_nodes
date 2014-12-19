@@ -175,7 +175,7 @@ div.panels-set-title-hide .panel-pane-is-title {
   margin: 0;
 }
 
-.panel-portlet .buttons input {
+.panel-portlet .buttons input, .panel-portlet .buttons button {
   margin: 0;
   padding: 0;
   display: inline;
