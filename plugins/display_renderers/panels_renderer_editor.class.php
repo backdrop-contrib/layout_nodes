@@ -1160,6 +1160,13 @@ class panels_renderer_editor extends panels_renderer_standard {
       unset($this->cache->style);
     }
 
+    if (!empty($form_state['cancel'])) {
+      // The cache must be saved prior to dismissing the modal.
+      panels_edit_cache_set($this->cache);
+      $this->commands[] = ctools_modal_command_dismiss();
+      return;
+    }
+
     // Copy settings from form state back into the cache.
     if(!empty($form_state['values']['settings'])) {
       if ($type == 'pane') {
@@ -1702,7 +1709,26 @@ function panels_edit_style_settings_form($form, &$form_state) {
     '#value' => t('Save'),
   );
 
+
+  // Need a cancel button since the style cache can persist and impact the wrong
+  // pane (or region, or display).
+  $form['cancel_style'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#submit' => array('panels_edit_style_settings_form_cancel'),
+  );
+
   return $form;
+}
+
+/**
+ * Cancel style settings form.
+ *
+ * Clears the editing cache to prevent styles being applied to incorrect regions
+ * or panes.
+ */
+function panels_edit_style_settings_form_cancel($form, &$form_state) {
+  $form_state['cancel'] = TRUE;
 }
 
 /**

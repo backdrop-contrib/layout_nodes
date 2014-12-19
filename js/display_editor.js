@@ -513,6 +513,11 @@ Drupal.behaviors.PanelsDisplayEditor = {
         $('#panels-preview').html(html);
       });
 
+    // Bind modal detach behaviors to cancel current form.
+    $(document).bind('CToolsDetachBehaviors', function(event, context) {
+      $('#edit-cancel-style', context).trigger('click');
+    });
+
     var setTitleClass = function () {
       if ($('#edit-display-title-hide-title').val() == 2) {
         $('#panels-dnd-main').removeClass('panels-set-title-hide');
