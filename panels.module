@@ -43,7 +43,7 @@ function panels_theme() {
     'variables' => array('id' => NULL, 'image' => NULL, 'title' => NULL),
   );
   $theme['panels_pane'] = array(
-    'variables' => array('output' => array(), 'pane' => array(), 'display' => array()),
+    'variables' => array('content' => array(), 'pane' => array(), 'display' => array()),
     'path' => drupal_get_path('module', 'panels') . '/templates',
     'template' => 'panels-pane',
   );
