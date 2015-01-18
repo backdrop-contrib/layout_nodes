@@ -571,3 +571,7 @@ div.panels-ipe-button-container {
 form#panels-ipe-edit-control-form {
   text-align: center;
 }
+
+.panels-ipe-dragbar-admin-title{
+  font-size: 0.9em;
+}
