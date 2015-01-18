@@ -1332,6 +1332,10 @@ function template_preprocess_panels_pane(&$vars) {
     $vars['more'] = l($content->more['title'], $content->more['href'], $content->more);
   }
 
+  if (!empty($content->attributes)) {
+    $vars['attributes_array'] = array_merge($vars['attributes_array'], $content->attributes);
+  }
+
   $vars['content'] = !empty($content->content) ? $content->content : '';
 
 }
