@@ -161,7 +161,7 @@ class panels_renderer_editor extends panels_renderer_standard {
     if ($buttons) {
       $output .= '<span class="buttons">' . $buttons . '</span>';
     }
-    $output .= '<span class="text">' . $title . '</span>';
+    $output .= '<span class="text" title="' . check_plain($title) . '">' . $title . '</span>';
     $output .= '</div>'; // grabber
 
     $output .= '<div class="panel-pane-collapsible">';
