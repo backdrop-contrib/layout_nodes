@@ -519,3 +519,14 @@ function panels_mini_panels_dashboard_blocks(&$vars) {
   );
 
 }
+
+/**
+ * Implements template_preprocess_ctools_wizard_trail().
+ *
+ * Customize the divider used in the CTools wizard to build the edit pages for
+ * Mini Panels as a stop-gap measure until the UX can be completely re-done.
+ */
+function panels_mini_preprocess_ctools_wizard_trail(&$variables) {
+  $variables['divider'] = ' | ';
+  drupal_add_css(drupal_get_path('module', 'panels_mini') . '/panels_mini.css');
+}
