@@ -6,7 +6,22 @@
  * Core functionality for the Panels engine.
  */
 
-define('PANELS_REQUIRED_CTOOLS_API', '2.0-alpha');
+define('PANELS_REQUIRED_CTOOLS_API', '2.0.8');
+
+/**
+ * The current working panels version.
+ *
+ * In a release, it should be 7.x-3.x, which should match what drush make will
+ * create. In a dev format, it should be 7.x-3.(x+1)-dev, which will allow
+ * modules depending on new features in panels to depend on panels > 7.x-3.x.
+ *
+ * To define a specific version of Panels as a dependency for another module,
+ * simply include a dependency line in that module's info file, e.g.:
+ *   ; Requires Panels v7.x-3.4 or newer.
+ *   dependencies[] = panels (>=3.4)
+ */
+define('PANELS_VERSION', '7.x-3.5-dev');
+
 
 define('PANELS_TITLE_FIXED', 0); // Hide title use to be true/false. So false remains old behavior.
 define('PANELS_TITLE_NONE', 1); // And true meant no title.
@@ -1330,10 +1345,6 @@ function template_preprocess_panels_pane(&$vars) {
       $content->more['title'] = t('more');
     }
     $vars['more'] = l($content->more['title'], $content->more['href'], $content->more);
-  }
-
-  if (!empty($content->attributes)) {
-    $vars['attributes_array'] = array_merge($vars['attributes_array'], $content->attributes);
   }
 
   $vars['content'] = !empty($content->content) ? $content->content : '';
