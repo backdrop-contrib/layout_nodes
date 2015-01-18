@@ -1778,27 +1778,92 @@ function _panels_builder_filter($layout) {
 /**
  * Implements hook_get_pane_links_alter().
  *
- * add an Edit block link for custom blocks to the Panels pane links menu
+ * add links to the Panels pane dropdown menu.
  */
 function panels_get_pane_links_alter(&$links, $pane, $content_type) {
   if ($pane->type === "block"){
-    $name_of_block = "";
     $prefixed_name = $pane->subtype;
 
-    // breakup the subtype string
+    // breakup the subtype string into parts.
     $exploded_subtype = explode('-', $pane->subtype);
 
-    // contains view- or block-
-    $subtype_prefix = $exploded_subtype[0] . '-';
+    // get the first part of the string.
+    $subtype_prefix = $exploded_subtype[0];
 
-    // remove the prefix to get the name
-    $name_of_block = ltrim( $prefixed_name, $subtype_prefix);
+    // get the first part of the string and add a hyphen.
+    $subtype_prefix_hyphen = $exploded_subtype[0] . '-';
 
-    $links['top']['edit_custom_content'] = array(
-      'title' => t('Edit block'),
-      'href' => url('admin/structure/block/manage/block/' . $name_of_block . '/configure', array('absolute' => TRUE)),
-      'attributes' => array('target' => array('_blank')),
-    );
+    // remove the prefix block- to get the name.
+    $name_of_block = ltrim( $prefixed_name, $subtype_prefix_hyphen);
+
+    // check for user added menus created at /admin/structure/menu/add
+    // menus of that type have a subtype that is prefixed with menu-menu-
+    if (substr($prefixed_name, 0, 10) === "menu-menu-"){
+      // remove the first prefix menu- from menu-menu- to get the name.
+      $name_of_block = substr($prefixed_name, 5);
+
+      $links['top'][] = array(
+        'title' => t('Edit block'),
+        'href' => url('admin/structure/block/manage/' . $subtype_prefix . '/' . $name_of_block . '/configure', array('absolute' => TRUE)),
+        'attributes' => array('target' => array('_blank')),
+      );
+
+      $links['top'][] = array(
+        'title' => t('Edit menu links'),
+        'href' => url('admin/structure/menu/manage/' . $name_of_block, array('absolute' => TRUE)),
+        'attributes' => array('target' => array('_blank')),
+      );
+    }
+
+    // check for module provided menu blocks like Devels or Features
+    // menus of that type have a subtype that is prefixed with menu-
+    elseif(substr($prefixed_name, 0, 5) === "menu-"){
+      // remove the first prefix menu- to get the name.
+      $name_of_block = substr($prefixed_name, 5);
+
+      $links['top'][] = array(
+        'title' => t('Edit block'),
+        'href' => url('admin/structure/block/manage/' . $subtype_prefix . '/' . $name_of_block . '/configure', array('absolute' => TRUE)),
+        'attributes' => array('target' => array('_blank')),
+      );
+
+      $links['top'][] = array(
+        'title' => t('Edit menu links'),
+        'href' => url('admin/structure/menu/manage/' . $name_of_block, array('absolute' => TRUE)),
+        'attributes' => array('target' => array('_blank')),
+      );
+    }
+
+    // check for system blocks with menu links
+    elseif(substr($prefixed_name, 0, 7) === "system-") {
+      // remove the first prefix system- to get the name
+      $name_of_block = substr($prefixed_name, 7);
+
+      $names_of_system_menus = menu_list_system_menus();
+
+      $links['top'][] = array(
+        'title' => t('Edit block'),
+        'href' => url('admin/structure/block/manage/' . $subtype_prefix . '/' . $name_of_block . '/configure', array('absolute' => TRUE)),
+        'attributes' => array('target' => array('_blank')),
+      );
+
+      if (array_key_exists($name_of_block, $names_of_system_menus)){
+        $links['top'][] = array(
+          'title' => t('Edit menu links'),
+          'href' => url('admin/structure/menu/manage/' . $name_of_block, array('absolute' => TRUE)),
+          'attributes' => array('target' => array('_blank')),
+        );
+      }
+    }
+
+    // for all other blocks without menus
+    else{
+      $links['top'][] = array(
+        'title' => t('Edit block'),
+        'href' => url('admin/structure/block/manage/' . $subtype_prefix . '/' . $name_of_block . '/configure', array('absolute' => TRUE)),
+        'attributes' => array('target' => array('_blank')),
+      );
+    }
   }
 }
 
