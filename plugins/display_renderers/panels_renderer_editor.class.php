@@ -947,7 +947,7 @@ class panels_renderer_editor extends panels_renderer_standard {
         ctools_include('content');
         $pane = &$this->display->content[$pid];
         $style = isset($pane->style['style']) ? $pane->style['style'] : 'default';
-        $title = ctools_content_admin_title($pane->type, $pane->subtype, $pane->configuration);
+        $title = ctools_content_admin_title($pane->type, $pane->subtype, $pane->configuration, $this->display->context);
         if (!$title) {
           $title = $pane->type;
         }
