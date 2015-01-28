@@ -20,7 +20,7 @@ define('PANELS_REQUIRED_CTOOLS_API', '2.0.8');
  *   ; Requires Panels v7.x-3.4 or newer.
  *   dependencies[] = panels (>=3.4)
  */
-define('PANELS_VERSION', '7.x-3.5-dev');
+define('PANELS_VERSION', '7.x-3.5');
 
 
 define('PANELS_TITLE_FIXED', 0); // Hide title use to be true/false. So false remains old behavior.
