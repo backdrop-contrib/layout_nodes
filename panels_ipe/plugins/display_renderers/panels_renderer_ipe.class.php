@@ -322,6 +322,9 @@ class panels_renderer_ipe extends panels_renderer_editor {
     // Filter out builders
     $layouts = array_filter($layouts, '_panels_builder_filter');
 
+    // Let other modules filter the layouts.
+    drupal_alter('panels_layouts_available', $layouts);
+
     // Define the current layout
     $current_layout = $this->plugins['layout']['name'];
 
