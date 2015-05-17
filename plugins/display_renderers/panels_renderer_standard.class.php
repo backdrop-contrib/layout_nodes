@@ -474,6 +474,7 @@ class panels_renderer_standard {
    *   The array of rendered panes, keyed on pane pid.
    */
   function render_panes() {
+    drupal_alter('panels_prerender_panes', $this);
     ctools_include('content');
 
     // First, render all the panes into little boxes.
@@ -601,6 +602,7 @@ class panels_renderer_standard {
    *   An array of rendered panel regions, keyed on the region name.
    */
   function render_regions() {
+    drupal_alter('panels_prerender_regions', $this);
     $this->rendered['regions'] = array();
 
     // Loop through all panel regions, put all panes that belong to the current
