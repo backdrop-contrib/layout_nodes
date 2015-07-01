@@ -1506,7 +1506,7 @@ function panels_ajax_edit_pane_next(&$form_state) {
 }
 
 /**
- * Handle the 'finish' click on teh add/edit pane form wizard.
+ * Handle the 'finish' click on the add/edit pane form wizard.
  *
  * All we need to do is set a flag so the return can handle adding
  * the pane.
