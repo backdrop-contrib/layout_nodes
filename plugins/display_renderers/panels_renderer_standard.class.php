@@ -152,6 +152,15 @@ class panels_renderer_standard {
   var $suffix = '';
 
   /**
+   * Boolean flag indicating whether to render the layout even if all rendered
+   * regions are blank. If FALSE, the layout renders as an empty string (without
+   * prefix or suffix) if not in administrative mode.
+   *
+   * @var bool
+   */
+  var $show_empty_layout = TRUE;
+
+  /**
    * Receive and store the display object to be rendered.
    *
    * This is a psuedo-constructor that should typically be called immediately
@@ -394,6 +403,22 @@ class panels_renderer_standard {
     }
     else {
       $theme = $this->plugins['layout']['theme'];
+    }
+
+    // Determine whether to render layout.
+    $show = TRUE;
+    if (!$this->show_empty_layout && !$this->admin) {
+      $show = FALSE;
+      // Render layout if any region is not empty.
+      foreach ($this->rendered['regions'] as $region) {
+        if (is_string($region) && $region !== '') {
+          $show = TRUE;
+          break;
+        }
+      }
+    }
+    if (!$show) {
+      return;
     }
 
     $this->rendered['layout'] = theme($theme, array('css_id' => check_plain($this->display->css_id), 'content' => $this->rendered['regions'], 'settings' => $this->display->layout_settings, 'display' => $this->display, 'layout' => $this->plugins['layout'], 'renderer' => $this));
