@@ -72,6 +72,7 @@ class panels_renderer_ipe extends panels_renderer_editor {
 
     ctools_add_css('panels_dnd', 'panels');
     ctools_add_css('panels_admin', 'panels');
+    ctools_add_js('panels-base', 'panels');
     ctools_add_js('panels_ipe', 'panels_ipe');
     ctools_add_css('panels_ipe', 'panels_ipe');
 
