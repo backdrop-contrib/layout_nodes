@@ -396,6 +396,19 @@ function panels_node_panels_dashboard_blocks(&$vars) {
   );
 }
 
+/**
+ * Implements hook_panels_ipe_access().
+ */
+function panels_node_panels_ipe_access($display) {
+  // We only care about Panels displays from panels_node.
+  if (isset($display->context['panel-node'])) {
+    // Only allow access to use the IPE if the user has 'update' access to
+    // the underlying node.
+    $node = $display->context['panel-node']->data;
+    return node_access('update', $node); 
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Callbacks for panel caching.
 

@@ -302,6 +302,11 @@ function panels_permission() {
       'title' => t("Change layouts with the Panels In-Place Editor"),
       'description' => t("Allows a user to change layouts with the IPE."),
     ),
+    'bypass access in place editing' => array(
+      'title' => t("Bypass access checks when using Panels In-Place Editor"),
+      'description' => t("Allows using IPE even if user does not have additional permissions granted by other modules."),
+      'restrict access' => TRUE,
+    ),
     'administer advanced pane settings' => array(
       'title' => t("Configure advanced settings on Panel panes"),
       'description' => t(""),
