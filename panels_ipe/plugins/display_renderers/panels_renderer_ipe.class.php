@@ -259,6 +259,19 @@ class panels_renderer_ipe extends panels_renderer_editor {
       // Break the lock.
       panels_edit_cache_break_lock($this->cache);
     }
+  } 
+
+  function get_panels_storage_op_for_ajax($method) {
+    switch ($method) {
+      case 'ajax_unlock_ipe':
+      case 'ajax_save_form':
+        return 'update';
+      case 'ajax_change_layout':
+      case 'ajax_set_layout':
+        return 'change layout';
+    }
+
+    return parent::get_panels_storage_op_for_ajax($method);
   }
 
   /**
