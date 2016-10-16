@@ -675,3 +675,17 @@ function panels_update_7307() {
     variable_del($name);
   }
 }
+
+/**
+ * Rename style permissions.
+ */
+function panels_update_7308() {
+  $permissions = array(
+    'administer panels display styles',
+    'administer panels pane styles',
+    'administer panels region styles',
+  );
+  foreach (array_keys(user_roles(TRUE, 'administer panels styles')) as $rid) {
+    user_role_grant_permissions($rid, $permissions);
+  }
+}

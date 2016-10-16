@@ -317,7 +317,19 @@ function panels_permission() {
     ),
     'administer panels styles' => array(
       'title' => t("Administer Panels styles"),
+      'description' => t("DEPRECATED: Modules using this permission should use specific style permissions. See Issue #2329419 for more info."),
+    ),
+    'administer panels display styles' => array(
+      'title' => t("Administer Panels display styles"),
+      'description' => t("Allows a user to administer the styles of Panel displays."),
+    ),
+    'administer panels pane styles' => array(
+      'title' => t("Administer Panels pane styles"),
       'description' => t("Allows a user to administer the styles of Panel panes."),
+    ),
+    'administer panels region styles' => array(
+      'title' => t("Administer Panels region styles"),
+      'description' => t("Allows a user to administer the styles of Panel regions."),
     ),
     'use panels caching features' => array(
       'title' => t("Configure caching settings on Panels"),
