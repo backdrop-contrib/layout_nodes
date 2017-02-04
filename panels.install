@@ -652,28 +652,15 @@ function panels_update_7307() {
     db_create_table($table_name, $schema[$table_name]);
   }
 
-  // Read existing allowed settings and store them in a new table.
-  $variables = db_select('variable', 'v')
-    ->fields('v', array('name'))
-    ->condition('name', '%' . db_like('_allowed_types'), 'LIKE')
-    ->execute()
-    ->fetchCol();
-  foreach ($variables as $name) {
-    $module = str_replace('_allowed_types', '', $name);
-    $variable = variable_get($name);
-    foreach ($variable as $type => $allowed) {
-      $allowed = empty($allowed) ? 0 : 1;
-      db_merge('panels_allowed_types')
-        ->key(array('module' => $module, 'type' => $type))
-        ->fields(array(
-          'module' => $module,
-          'type' => $type,
-          'allowed' => $allowed,
-        ))
-        ->execute();
-    }
-    variable_del($name);
-  }
+  /*
+  The version of this update hook in release 3.8 included code that
+  converted storage of allowed_types configuration from variables to the new
+  table, and also deleted existing allowed_types configuration variables.
+  See https://www.drupal.org/node/2479879.
+
+  In order to prevent data loss on sites that had not yet updated to 3.8, the
+  conversion and variable-deletion code has been removed from this update hook.
+   */
 }
 
 /**
