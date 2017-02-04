@@ -220,6 +220,10 @@ div.panels-ipe-handlebar-wrapper li.edit a span {
   background-image: url(../images/icon-settings.png);
 }
 
+div.panels-ipe-handlebar-wrapper li.css a span {
+  background-image: url(../images/icon-css.png);
+}
+
 div.panels-ipe-handlebar-wrapper li.style a span,
 div.panels-ipe-newblock a.style span {
   background-image: url(../images/icon-style.png);

@@ -108,6 +108,19 @@ function template_preprocess_panels_ipe_pane_wrapper(&$vars) {
     );
   }
 
+  // Add option to configure CSS.
+  if (user_access('administer advanced pane settings')) {
+    $vars['links']['css'] = array(
+      'title' => '<span>' . t('CSS') . '</span>',
+      'href' => $renderer->get_url('pane-css', $pane->pid),
+      'html' => TRUE,
+      'attributes' => array(
+        'class' => array('ctools-use-modal', 'panels-ipe-hide-bar'),
+        'title' => t('CSS'),
+      ),
+    );
+  }
+
   // Deleting is managed entirely in the js; this is just an attachment point
   // for it
   $vars['links']['delete'] = array(
