@@ -426,6 +426,7 @@ function panels_common_allowed_layouts_form(&$form, &$form_state, $module_name) 
 
   $form_state['allowed_layouts'] = &$allowed_layouts;
 
+  ctools_add_js('panels-base', 'panels');
   ctools_add_js('layout', 'panels');
 
   $form['layout_selection'] = array(
