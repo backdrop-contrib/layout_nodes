@@ -177,7 +177,7 @@ function template_preprocess_panels_ipe_add_pane_button(&$vars) {
   $region_id = $vars['region_id'];
   $display = $vars['display'];
   $renderer = $vars['renderer'];
-  $vars['links'] = '';
+  $vars['links'] = array();
 
   // Add option to configure style in IPE
   if (user_access('administer panels region styles')) {
