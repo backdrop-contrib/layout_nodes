@@ -83,6 +83,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
     items: 'div.panels-ipe-portlet-wrapper',
     handle: 'div.panels-ipe-draghandle',
     cancel: '.panels-ipe-nodrag',
+    tolerance: 'pointer',
     dropOnEmpty: true
   }, cfg.sortableOptions || {});
 
