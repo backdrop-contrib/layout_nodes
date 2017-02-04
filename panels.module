@@ -1176,7 +1176,7 @@ function panels_render_display(&$display, $renderer = NULL) {
     if ($form_context = ctools_context_get_form($display->context)) {
       $form_context->form['#theme'] = 'panels_render_display_form';
       if (empty($form_context->form['#theme_wrappers']) || !in_array('form', $form_context->form['#theme_wrappers'])) {
-        $form_context['#theme_wrappers'][] = 'form';
+        $form_context->form['#theme_wrappers'][] = 'form';
       }
       $form_context->form['#display'] = &$display;
       return $form_context->form;
