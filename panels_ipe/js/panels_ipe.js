@@ -50,7 +50,7 @@ Drupal.behaviors.PanelsIPE = {
           Drupal.PanelsIPE.editors[key].showContainer();
         });
     }
-    $('.panels-ipe-hide-bar').once('panels-ipe-hide-bar-processed').click(function() {
+    $('.panels-ipe-hide-bar').once('panels-ipe-hide-bar').click(function() {
       Drupal.PanelsIPE.editors[key].hideContainer();
     });
     Drupal.PanelsIPE.bindClickDelete(context);
@@ -312,6 +312,7 @@ function DrupalPanelsIPE(cache_key, cfg) {
       // @todo this isn't ideal but I can't seem to figure out how to keep an unprocessed backup
       // that will later get processed.
       $('.ctools-use-modal-processed', ipe.topParent).removeClass('ctools-use-modal-processed');
+      $('.panels-ipe-hide-bar-processed', ipe.topParent).removeClass('panels-ipe-hide-bar-processed');
       $('.pane-delete-processed', ipe.topParent).removeClass('pane-delete-processed');
       ipe.topParent.fadeIn('medium');
       Drupal.attachBehaviors();
