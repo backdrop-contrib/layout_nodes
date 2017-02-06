@@ -355,6 +355,9 @@ class panels_renderer_ipe extends panels_renderer_editor {
       $buttons = &drupal_static('panels_ipe_toolbar_buttons', array());
       $output = theme('panels_ipe_toolbar', array('buttons' => $buttons));
       $this->commands[] = ajax_command_replace('#panels-ipe-control-container', $output);
+
+      $storage_id = $this->cache->display->storage_id;
+      cache_clear_all('panels_mini_load:' . $storage_id, 'cache_panels', TRUE);
     }
     else {
       // Cancelled. Clear the cache.
