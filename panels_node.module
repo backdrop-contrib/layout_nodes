@@ -17,11 +17,6 @@
  * is true.
  */
 function panels_node_preprocess_layout(&$variables) {
-  $variables += array(
-    'action_links' => '',
-    'tabs' => '',
-    'title' => '',
-  );
   if ($variables['layout']->settings['panels_node']) {
     $variables['admin'] = TRUE;
   }
