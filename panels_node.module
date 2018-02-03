@@ -344,7 +344,7 @@ function panels_node_hook_view($node, $view_mode) {
  * Settings for panel nodes.
  */
 function panels_node_settings() {
-  return backdrop_get_form('panels_common_settings', 'panels_node');
+  return array();
 }
 
 // ---------------------------------------------------------------------------
