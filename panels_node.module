@@ -251,8 +251,8 @@ function panels_node_hook_insert(&$node) {
   // Create a new display and record that.
   $display = new Layout($config);
   $display->layout_template = $node->panels_node['layout'];
-  $display->name = 'test_name'; // will need to build unique name from title or NID.
-  // $display->storage_type = 'panels_node';
+  $display->name = 'panels_node_' . $node->nid;
+  $display->module = 'panels_node';
   // $display->storage_id = $node->nid;
 
 /*   // Special handling for nodes being imported from an export.module data dump.
@@ -281,7 +281,7 @@ function panels_node_hook_insert(&$node) {
 function panels_node_hook_delete(&$node) {
   db_delete('panels_node')->condition('nid', $node->nid)->execute();
   if (!empty($node->panels_node['did'])) {
-    panels_delete_display($node->panels_node['did']);
+    //panels_delete_display($node->panels_node['did']);
   }
 }
 
