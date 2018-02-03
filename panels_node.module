@@ -424,4 +424,101 @@ function panels_node_edit_content($node) {
   return backdrop_get_form('layout_content_form', $display);
 }
 
+function panels_node_menu_alter(&$items) {
+  $items['admin/structure/layouts']['page callback'] = 'panels_node_layout_list_page';
+}
+
+/**
+ * Overrides layout_list_page() to hide node layouts.
+ */
+function panels_node_layout_list_page() {
+  $layouts = layout_load_all();
+
+  // Group layouts by path.
+  $path_groups = array();
+  foreach ($layouts as $layout) {
+    if ($layout->module != 'panels_node') {
+      $path_groups[$layout->getPath()][$layout->name] = $layout;
+    }
+  }
+
+  // Assemble the rows of the table.
+  $rows = array();
+  foreach ($path_groups as $path => $group) {
+    // Print a row for rearranging a group of layouts.
+    $operations = array(
+      '#type' => 'dropbutton',
+      '#links' => _layout_get_group_operations($path, $group),
+    );
+    $row = array();
+    // Default layouts have a null path.
+    if ($path === '') {
+      $row[] = array('data' => t('Default layouts (used on all paths without a specific layout)'));
+      // Empty columns are intentional so that they may be hidden with
+      // priority-low class on the $header array.
+      $row[] = '';
+      $row[] = '';
+    }
+    else {
+      $path_link = strpos($path, '%') === FALSE ? l($path, $path) : check_plain($path);
+      $row[] = array('data' => $path_link);
+      // Empty columns are intentional.
+      $row[] = '';
+      $row[] = '';
+    }
+    if (count($operations['#links']) !== 0) {
+      $row[] = backdrop_render($operations);
+    }
+    else {
+      $row[] = '';
+    }
+    $rows[] = array('data' => $row, 'class' => array('layout-group'));
+
+    foreach ($group as $layout) {
+      $operations = array(
+        '#type' => 'dropbutton',
+        '#links' => _layout_get_operations($layout),
+      );
+      if ($layout->storage === LAYOUT_STORAGE_OVERRIDE) {
+        $storage = t('Overridden');
+      }
+      elseif ($layout->storage === LAYOUT_STORAGE_DEFAULT) {
+        $storage = t('Default (module-provided)');
+      }
+      else {
+        $storage = t('Custom');
+      }
+
+      $row = array();
+      $row[] = theme('layout_info', array('layout' => $layout));
+      $row[] = theme('layout_condition_info', array('layout' => $layout));
+      $row[] = $storage;
+      $row[] = backdrop_render($operations);
+      $class = array('layout-row');
+      if ($layout->disabled) {
+        $class[] = 'disabled';
+      }
+      $rows[] = array('data' => $row, 'class' => $class);
+    }
+  }
+
+  $header = array(
+    array('data' => t('Path and layout'), 'class' => array('layout-title')),
+    array('data' => t('Visibility conditions'), 'class' => array('layout-conditions', 'priority-low')),
+    array('data' => t('Storage state'), 'class' => array('layout-status', 'priority-low')),
+    array('data' => t('Operations'), 'class' => array('layout-operations')),
+  );
+
+  $page = array();
+  $page['#attached']['css'][] = backdrop_get_path('module', 'layout') . '/css/layout.admin.css';
+  $page['table'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#attributes' => array('class' =>   array('layout-list')),
+    '#empty' => t('No layouts have been created yet.'),
+  );
+  return $page;
+}
+
 
