@@ -281,7 +281,8 @@ function panels_node_hook_insert(&$node) {
 function panels_node_hook_delete(&$node) {
   db_delete('panels_node')->condition('nid', $node->nid)->execute();
   if (!empty($node->panels_node['did'])) {
-    //panels_delete_display($node->panels_node['did']);
+    $layout = layout_load($node->panels_node['did']);
+    $layout->delete();
   }
 }
 
