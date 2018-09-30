@@ -264,13 +264,21 @@ function panels_node_hook_insert(&$node) {
  */
   $display->save();
   $node->panels_node['did'] = $display->name;
+  dpm($node);
 
   db_insert('panels_node')
     ->fields(array(
     'nid' => $node->nid,
-    'did' => $display->name,
-    'css_id' => $node->panels_node['css_id'],
-    'pipeline' => $node->panels_node['pipeline'],
+    'path' => '', // todo remove path
+    'title' => $node->title, // todo remove title
+    'description' => '', // todo remove description
+    'renderer_name' => '', // todo remove renderer_name??
+    'module' => 'panels_node', // todo remove module
+    'weight' => 1, // todo remove weight
+    'storage' => 1, // todo remove storage
+    'layout_template' => $node->panels_node['layout'],
+    'disabled' => 0, // todo remove disabled
+    'settings' => serialize(array())
   ))
     ->execute();
 }
@@ -303,6 +311,9 @@ function panels_node_hook_update($node) {
  * Implements hook_view().
  */
 function panels_node_hook_view($node, $view_mode) {
+      dpm(panels_node_layout_load($node->nid));
+      dpm(layout_load('default'));
+      dpm($node);
   static $rendering = array();
 
   // Prevent loops if someone foolishly puts the node inside itself:
@@ -318,8 +329,9 @@ function panels_node_hook_view($node, $view_mode) {
     $node->readmore = TRUE;
   }
   else {
-    if (!empty($node->panels_node['did'])) {
-      $display = layout_load($node->panels_node['did']);
+    if (!empty($node->panels_node['nid'])) {
+      $display = panels_node_layout_load($node->nid);
+      dpm($display);
       // This lets us know if a template is being used by the page or the node.
       $display->settings['panels_node'] = TRUE;
       $display->css_id = $node->panels_node['css_id'];
@@ -416,15 +428,64 @@ function panels_node_edit_layout_submit($form, &$form_state) {
  * Pass through to the panels content editor.
  */
 function panels_node_edit_content($node) {
-//  ctools_include('plugins', 'panels');
-  // ctools_include('context');
-  $display = layout_tempstore_load($node->panels_node['did']);
+  if (!$display = layout_tempstore_load('panel-node-' . $node->nid)) {
+    $display = panels_node_layout_load($node->nid);
+    $display->name = 'panel-node-' . $node->nid;
+    $displaynn = layout_load('default');
+    
+    layout_set_layout_tempstore($display);
+  }
 
-  // $display->context = panels_node_get_context($node);
+  $display->node = $node;
   module_load_include('inc', 'layout', 'layout.admin');
   return backdrop_get_form('layout_content_form', $display);
 }
 
+function panels_node_form_layout_content_form_alter(&$form, &$form_state, $form_id) {
+  if ($form['#layout']->module == 'panels_node') {
+    $form['actions']['submit']['#submit'] = array('panels_node_layout_content_form_submit');
+  }
+}
+
+function panels_node_layout_content_form_submit(&$form, &$form_state) {
+  dpm($form_state['layout']);
+  $layout = $form_state['layout'];
+  // Update the block positions based on the hidden position elements.
+  if (!empty($form_state['values']['content']['positions'])) {
+    foreach ($form_state['values']['content']['positions'] as $region_id => $blocks) {
+      if ($blocks) {
+        $uuids = array_filter(explode(',', $blocks));
+        foreach ($uuids as $block_index => $uuid) {
+          if (isset($layout->content[$uuid])) {
+            panels_node_save_block($layout, $region_id, $uuid, $block_index);
+          }
+        }
+      }
+    }
+  }
+}
+
+function panels_node_save_block($layout, $region_id, $uuid, $block_index) {
+  $block = $layout->content[$uuid];
+  $class = get_class($block);
+  dpm($block);
+  $data = array(
+    'nid' => $layout->node->nid,
+    'uuid' => $uuid,
+    'region_id' => $region_id,
+    'block_index' => $block_index,
+    'block_data' => $block,
+    );
+  $exists = db_query('SELECT count(uuid) FROM {panel_blocks} WHERE uuid = :uuid', array(':uuid' => $uuid))->fetchField();
+  if ($exists) {
+    backdrop_write_record('panel_blocks', $data, 'uuid');
+  }
+  else {
+    backdrop_write_record('panel_blocks', $data);
+  }
+}
+    
+  
 function panels_node_menu_alter(&$items) {
   $items['admin/structure/layouts']['page callback'] = 'panels_node_layout_list_page';
 }
@@ -522,4 +583,26 @@ function panels_node_layout_list_page() {
   return $page;
 }
 
+function panels_node_layout_load($nid) {
+  // @todo join instead of two queries?
+  $result = db_query("SELECT * FROM {panels_node} WHERE nid = :nid", array(':nid' => $nid))->fetchObject();
+  $blocks = db_query("SELECT * FROM {panel_blocks} WHERE nid = :nid", array(':nid' => $nid));
+  $config = array();
+  // Create a new display and record that.
+  $layout = new Layout($config);
+  $layout->title = $result->title;
+  $layout->module = $result->module;
+  $layout->layout_template = $result->layout_template;
+  $layout->settings = unserialize($result->settings);
+
+  $new_content = array();
+  $new_positions = array();
+  foreach ($blocks as $data) {
+    $block = unserialize($data->block_data);
+    $layout->content[$data->uuid] = $block;
+    $layout->positions[$data->region_id][$data->block_index] = $data->uuid;
+  }
+
+  return $layout;
+}
 

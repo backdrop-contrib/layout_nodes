@@ -26,21 +26,88 @@ function panels_node_schema_1() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'css_id' => array(
+      'path' => array(
         'type' => 'varchar',
         'length' => '255',
       ),
-      'did' => array(
+      'title' => array(
         'type' => 'varchar',
         'not null' => TRUE,
         'length' => '255',
       ),
-      'pipeline' => array(
+      'description' => array(
         'type' => 'varchar',
         'length' => '255',
       ),
+      'renderer_name' => array(
+        'type' => 'varchar',
+        'length' => '255',
+      ),
+      'module' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => '255',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'storage' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'layout_template' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => '255',
+      ),
+      'disabled' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 1,
+      ),
+      'settings' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
     ),
-    'primary key' => array('did'),
+    'primary key' => array('nid'),
+  );
+  $schema['panel_blocks'] = array(
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uuid' => array(
+        'type' => 'varchar',
+        'length' => '40',
+        'not null' => TRUE,
+      ),
+      'region_id' => array(
+        'type' => 'varchar',
+        'length' => '255',
+      ),
+      'block_index' => array(
+        'type' => 'int',
+        'default' => 0,
+      ),
+      'block_data' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('uuid'),
+    'indexes' => array(
+      'nid_uuid' => array('nid', 'uuid'),
+      'nid' => array('nid'),
+      'uuid' => array('uuid'),
+    ),
   );
 
   return $schema;
