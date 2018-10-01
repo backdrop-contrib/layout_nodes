@@ -74,7 +74,7 @@ function panels_node_menu() {
     'title' => 'Choose layout',
     'access callback' => 'panels_add_panel_access_callback',
     'page callback' => 'backdrop_get_form',
-    'page arguments' => array('panels_node_add'),
+    'page arguments' => array('panels_node_edit_layout'),
     'type' => MENU_CALLBACK,
   );
 
@@ -102,46 +102,6 @@ function panels_add_panel_access_callback() {
 function panels_node_admin_paths_alter(&$paths) {
   $paths['node/*/panel_layout'] = TRUE;
   $paths['node/*/panel_content'] = TRUE;
-}
-
-/**
- * Override of node add page to force layout selection prior
- * to actually editing a node.
- */
-function panels_node_add($form, &$form_state) {
-  backdrop_set_title(t('Create Panel node'));
-  $form['#attached']['js'][] = backdrop_get_path('module', 'layout') . '/js/layout.admin.js';
-  $form['#attached']['css'][] = backdrop_get_path('module', 'layout') . '/css/layout.admin.css';
-  $form['#attributes'] = array('class' => array('layout-settings-form'));
-
-  $form['layout_template'] = array(
-    '#title' => t('Layout template'),
-    '#type' => 'radios',
-    '#default_value' => $layout->layout_template,
-    '#options' => array(),
-    '#wrapper_attributes' => array('class' => array('clearfix', 'layout-options')),
-    '#required' => TRUE,
-  );
-
-  // Get the list of layout template options.
-  $all_template_info = layout_get_layout_template_info();
-  $excluded = config_get('layout.settings', 'excluded_templates');
-  foreach ($all_template_info as $template_name => $template_info) {
-    if (!in_array($template_name, $excluded)) {
-      $form['layout_template']['#options'][$template_name] = theme('layout_template_option', array('template_info' => $template_info));
-    }
-  }
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Create panel node'),
-  );
-
-  return $form;
-}
-
-function panels_node_add_submit($form, &$form_state) {
-  backdrop_goto('node/add/panel/' . $form_state['values']['layout_template']);
 }
 
 // ---------------------------------------------------------------------------
@@ -311,9 +271,6 @@ function panels_node_hook_update($node) {
  * Implements hook_view().
  */
 function panels_node_hook_view($node, $view_mode) {
-      dpm(panels_node_layout_load($node->nid));
-      dpm(layout_load('default'));
-      dpm($node);
   static $rendering = array();
 
   // Prevent loops if someone foolishly puts the node inside itself:
@@ -364,21 +321,25 @@ function panels_node_settings() {
 /**
  * Pass through to the panels layout editor.
  */
-function panels_node_edit_layout($form, &$form_state, $node) {
+function panels_node_edit_layout($form, &$form_state, $node = NULL) {
   $form['#attached']['js'][] = backdrop_get_path('module', 'layout') . '/js/layout.admin.js';
   $form['#attached']['css'][] = backdrop_get_path('module', 'layout') . '/css/layout.admin.css';
 
-  $layout = layout_load($node->panels_node['did']);
-  form_load_include($form_state, 'inc', 'layout', 'layout.admin');
-
-  $form_state['layout'] = &$layout;
+  $default_template = '';
+  if ($node) {
+    $layout = panels_node_layout_load($node->nid);
+    $default_template = $layout->layout_template;
+    $form_state['layout'] = $layout;
+    $form_state['node'] = $node;
+  }
+  dpm(layout_load('default'));
 
   $form['#attributes'] = array('class' => array('layout-settings-form'));
 
   $form['layout_template'] = array(
     '#title' => t('Layout template'),
     '#type' => 'radios',
-    '#default_value' => $layout->layout_template,
+    '#default_value' => $default_template,
     '#options' => array(),
     '#wrapper_attributes' => array('class' => array('clearfix', 'layout-options')),
     '#required' => TRUE,
@@ -395,12 +356,8 @@ function panels_node_edit_layout($form, &$form_state, $node) {
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save layout template'),
-    // '#validate' => array(
-      // 'layout_settings_form_validate',
-    // ),
+    '#value' => t('Save layout'),
     '#submit' => array(
-      'layout_settings_form_update_layout',
       'panels_node_edit_layout_submit',
     ),
   );
@@ -412,14 +369,28 @@ function panels_node_edit_layout($form, &$form_state, $node) {
  * Pass through to the panels content editor.
  */
 function panels_node_edit_layout_submit($form, &$form_state) {
-  $layout = $form_state['layout'];
-  $layout->save();
-
-  layout_clear_layout_tempstore($layout->name);
-  if (!empty($layout->is_new)) {
-    backdrop_set_message(t('Layout created. Blocks may now be added to this layout.'));
+  // If a layout isnt set yet, this should be a new node being added.
+  if (!isset($form_state['layout'])) {
+    backdrop_goto('node/add/panel/' . $form_state['values']['layout_template']);
   }
   else {
+    $layout = $form_state['layout'];
+    $layout->setLayoutTemplate($form_state['values']['layout_template']);
+    if (!empty($layout->positions)) {
+      foreach ($layout->positions as $region_id => $uuids) {
+        foreach ($uuids as $block_index => $uuid) {
+          if (isset($layout->content[$uuid])) {
+            panels_node_save_block($layout, $region_id, $uuid, $block_index);
+          }
+        }
+      }
+    }
+    db_update('panels_node')
+      ->fields(array(
+        'layout_template' => $form_state['values']['layout_template'],
+      ))
+      ->condition('nid', $form_state['node']->nid, '=')
+      ->execute();
     backdrop_set_message(t('Layout saved.'));
   }
 }
@@ -431,7 +402,6 @@ function panels_node_edit_content($node) {
   if (!$display = layout_tempstore_load('panel-node-' . $node->nid)) {
     $display = panels_node_layout_load($node->nid);
     $display->name = 'panel-node-' . $node->nid;
-    $displaynn = layout_load('default');
     
     layout_set_layout_tempstore($display);
   }
@@ -448,7 +418,6 @@ function panels_node_form_layout_content_form_alter(&$form, &$form_state, $form_
 }
 
 function panels_node_layout_content_form_submit(&$form, &$form_state) {
-  dpm($form_state['layout']);
   $layout = $form_state['layout'];
   // Update the block positions based on the hidden position elements.
   if (!empty($form_state['values']['content']['positions'])) {
@@ -463,11 +432,11 @@ function panels_node_layout_content_form_submit(&$form, &$form_state) {
       }
     }
   }
+  layout_clear_layout_tempstore('panel-node-' . $layout->node->nid);
 }
 
 function panels_node_save_block($layout, $region_id, $uuid, $block_index) {
   $block = $layout->content[$uuid];
-  $class = get_class($block);
   dpm($block);
   $data = array(
     'nid' => $layout->node->nid,
