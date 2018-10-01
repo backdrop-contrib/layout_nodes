@@ -214,21 +214,11 @@ function panels_node_hook_insert(&$node) {
   $display->name = 'panels_node_' . $node->nid;
   $display->module = 'panels_node';
 
-  $display->save();
-  $node->panels_node['did'] = $display->name;
-
   db_insert('panels_node')
     ->fields(array(
     'nid' => $node->nid,
-    'path' => '', // todo remove path
-    'title' => $node->title, // todo remove title
-    'description' => '', // todo remove description
-    'renderer_name' => '', // todo remove renderer_name??
     'module' => 'panels_node', // todo remove module
-    'weight' => 1, // todo remove weight
-    'storage' => 1, // todo remove storage
     'layout_template' => $node->panels_node['layout'],
-    'disabled' => 0, // todo remove disabled
     'settings' => serialize(array())
   ))
     ->execute();
