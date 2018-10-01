@@ -409,6 +409,7 @@ function panels_node_edit_content($node) {
 function panels_node_form_layout_content_form_alter(&$form, &$form_state, $form_id) {
   if ($form['#layout']->module == 'panels_node') {
     $form['actions']['submit']['#submit'] = array('panels_node_layout_content_form_submit');
+    $form['actions']['cancel']['#access'] = FALSE;
   }
 }
 
