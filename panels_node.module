@@ -213,18 +213,9 @@ function panels_node_hook_insert(&$node) {
   $display->layout_template = $node->panels_node['layout'];
   $display->name = 'panels_node_' . $node->nid;
   $display->module = 'panels_node';
-  // $display->storage_id = $node->nid;
 
-/*   // Special handling for nodes being imported from an export.module data dump.
-  if (!empty($node->export_display)) {
-    // This works by overriding the $display set above.
-    eval($node->export_display);
-    unset($node->export_display);
-  }
- */
   $display->save();
   $node->panels_node['did'] = $display->name;
-  dpm($node);
 
   db_insert('panels_node')
     ->fields(array(
@@ -288,12 +279,11 @@ function panels_node_hook_view($node, $view_mode) {
   else {
     if (!empty($node->panels_node['nid'])) {
       $display = panels_node_layout_load($node->nid);
-      dpm($display);
+
       // This lets us know if a template is being used by the page or the node.
       $display->settings['panels_node'] = TRUE;
       $display->css_id = $node->panels_node['css_id'];
       // TODO: Find a way to make sure this can't node_view.
-      // $display->context = panels_node_get_context($node);
       $display->cache_key = 'panels_node:' . $node->nid;
       $renderer = layout_create_renderer('standard', $display);
       $node->content['body'] = array(
@@ -332,7 +322,6 @@ function panels_node_edit_layout($form, &$form_state, $node = NULL) {
     $form_state['layout'] = $layout;
     $form_state['node'] = $node;
   }
-  dpm(layout_load('default'));
 
   $form['#attributes'] = array('class' => array('layout-settings-form'));
 
@@ -399,12 +388,18 @@ function panels_node_edit_layout_submit($form, &$form_state) {
  * Pass through to the panels content editor.
  */
 function panels_node_edit_content($node) {
+  // Load from database to tempstore as Layout pulls from tempstore to build
+  // the content form and blocks etc.
   if (!$display = layout_tempstore_load('panel-node-' . $node->nid)) {
     $display = panels_node_layout_load($node->nid);
     $display->name = 'panel-node-' . $node->nid;
-    
-    layout_set_layout_tempstore($display);
+
+    dpm($display);
+    // Don't use layout_set_layout_tempstore(). It locks the layout.
+    tempstore_set('layout.layout', $display->name, $display, 604800);
+    $display->locked = FALSE;
   }
+    dpm($display);
 
   $display->node = $node;
   module_load_include('inc', 'layout', 'layout.admin');
@@ -432,12 +427,13 @@ function panels_node_layout_content_form_submit(&$form, &$form_state) {
       }
     }
   }
+
   layout_clear_layout_tempstore('panel-node-' . $layout->node->nid);
 }
 
 function panels_node_save_block($layout, $region_id, $uuid, $block_index) {
   $block = $layout->content[$uuid];
-  dpm($block);
+
   $data = array(
     'nid' => $layout->node->nid,
     'uuid' => $uuid,
@@ -563,6 +559,7 @@ function panels_node_layout_load($nid) {
   $layout->module = $result->module;
   $layout->layout_template = $result->layout_template;
   $layout->settings = unserialize($result->settings);
+  $layout->locked = FALSE;
 
   $new_content = array();
   $new_positions = array();
