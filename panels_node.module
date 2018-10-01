@@ -319,8 +319,8 @@ function panels_node_edit_layout($form, &$form_state, $node = NULL) {
   if ($node) {
     $layout = panels_node_layout_load($node->nid);
     $default_template = $layout->layout_template;
+    $layout->node = $node;
     $form_state['layout'] = $layout;
-    $form_state['node'] = $node;
   }
 
   $form['#attributes'] = array('class' => array('layout-settings-form'));
@@ -378,10 +378,11 @@ function panels_node_edit_layout_submit($form, &$form_state) {
       ->fields(array(
         'layout_template' => $form_state['values']['layout_template'],
       ))
-      ->condition('nid', $form_state['node']->nid, '=')
+      ->condition('nid', $layout->node->nid, '=')
       ->execute();
     backdrop_set_message(t('Layout saved.'));
   }
+  layout_clear_layout_tempstore('panel-node-' . $layout->node->nid);
 }
 
 /**
@@ -394,12 +395,10 @@ function panels_node_edit_content($node) {
     $display = panels_node_layout_load($node->nid);
     $display->name = 'panel-node-' . $node->nid;
 
-    dpm($display);
     // Don't use layout_set_layout_tempstore(). It locks the layout.
     tempstore_set('layout.layout', $display->name, $display, 604800);
     $display->locked = FALSE;
   }
-    dpm($display);
 
   $display->node = $node;
   module_load_include('inc', 'layout', 'layout.admin');
