@@ -60,7 +60,7 @@ function layout_nodes_menu() {
   );
 
   $items['node/%node/layout_node'] = array(
-    'title' => 'Node layout',
+    'title' => 'Edit template',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('layout_nodes_edit_layout', 1),
     'weight' => 2,
@@ -70,7 +70,7 @@ function layout_nodes_menu() {
   );
 
   $items['node/%node/layout_node_content'] = array(
-    'title' => 'Node layout content',
+    'title' => 'Edit blocks',
     'page callback' => 'layout_nodes_edit_content',
     'weight' => 3,
   ) + $base;
