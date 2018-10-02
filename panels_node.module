@@ -17,8 +17,9 @@
  * is true.
  */
 function panels_node_preprocess_layout(&$variables) {
-  if ($variables['layout']->settings['panels_node']) {
+  if ($variables['layout']->module == 'panels_node') {
     $variables['admin'] = TRUE;
+    $variables['content']['title'] = '';
   }
 }
 
@@ -196,7 +197,11 @@ function panels_node_hook_insert(&$node) {
     'nid' => $node->nid,
     'module' => 'panels_node', // todo remove module
     'layout_template' => $node->panels_node['layout_template'],
-    'settings' => serialize(array())
+    'settings' => serialize(array(
+      'title' => '',
+      'title_display' => LAYOUT_TITLE_DEFAULT,
+      'title_block' => NULL,
+    ))
   ))
     ->execute();
 }
@@ -411,6 +416,11 @@ function panels_node_layout_load($node) {
   $layout->module = $result->module;
   $layout->layout_template = $result->layout_template;
   $layout->settings = unserialize($result->settings);
+  $layout->settings += array(
+      'title' => '',
+      'title_display' => LAYOUT_TITLE_DEFAULT,
+      'title_block' => NULL,
+    );
   $layout->locked = FALSE;
   $layout->setPath('node/%');
 
