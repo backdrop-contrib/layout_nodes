@@ -7,19 +7,10 @@
 /**
  * Implements hook_schema().
  */
-function panels_node_schema() {
-  // This should always point to our 'current' schema. This makes it relatively easy
-  // to keep a record of schema as we make changes to it.
-  return panels_node_schema_1();
-}
-
-/**
- * Schema version 1 for Panels in D6.
- */
-function panels_node_schema_1() {
+function layout_nodes_schema() {
   $schema = array();
 
-  $schema['panels_node'] = array(
+  $schema['layout_nodes'] = array(
     'fields' => array(
       'nid' => array(
         'type' => 'int',
@@ -44,7 +35,7 @@ function panels_node_schema_1() {
     ),
     'primary key' => array('nid'),
   );
-  $schema['panel_blocks'] = array(
+  $schema['layout_node_blocks'] = array(
     'fields' => array(
       'nid' => array(
         'type' => 'int',
@@ -84,15 +75,15 @@ function panels_node_schema_1() {
 /**
  * Implements hook_install().
  */
-function panels_node_install() {
-  db_query("UPDATE {system} SET weight = 11 WHERE name = 'panels_node'");
+function layout_nodes_install() {
+  db_query("UPDATE {system} SET weight = 11 WHERE name = 'layout_nodes'");
 
   // Create node type
-  $panel_node_type = array(
-    'type' => 'panel',
-    'name' => t('Panel Node Type'),
-    'base' => 'panels_node_hook',
-    'description' => t('A panel layout broken up into rows and columns.'),
+  $layout_nodes_node_type = array(
+    'type' => 'layout_node',
+    'name' => t('Layout node'),
+    'base' => 'layout_nodes_hook',
+    'description' => t('A node type which allows individual node layouts.'),
     'custom' => 1,
     'modified' => 1,
     'locked' => 0,
@@ -102,15 +93,15 @@ function panels_node_install() {
     ),
   );
 
-  $panel_node_type = node_type_set_defaults($panel_node_type);
-  node_type_save($panel_node_type);
-  node_add_body_field($panel_node_type, 'Teaser');
+  $layout_nodes_node_type = node_type_set_defaults($layout_nodes_node_type);
+  node_type_save($layout_nodes_node_type);
+  node_add_body_field($layout_nodes_node_type, 'Teaser');
 }
 
 /**
  * Implements hook_uninstall().
  */
-function panels_node_uninstall() {
-  db_query("DELETE FROM {node} WHERE type = 'panel'");
-  backdrop_uninstall_schema('panels_node');
+function layout_nodes_uninstall() {
+  db_query("DELETE FROM {node} WHERE type = 'layout_node'");
+  backdrop_uninstall_schema('layout_nodes');
 }

@@ -1,7 +1,6 @@
-name = Panel nodes
+name = Layout nodes
 description = Create nodes that are divided into areas with selectable content.
-package = "Panels"
+tags[] = layouts
 dependencies[] = layout
-configure = admin/structure/panels
 backdrop = 1.x
 type = module

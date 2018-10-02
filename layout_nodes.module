@@ -1,9 +1,9 @@
 <?php
 /**
- * @file panels_node.module
+ * @file layout_nodes.module
  *
- * This module provides the "panel" node type.
- * Panel nodes are useful to add additional content to the content area
+ * This module provides the "layout_node" node type.
+ * Layout-enabled nodes are useful to add additional content to the content area
  * on a per-node base.
  */
 
@@ -16,8 +16,8 @@
  * is rendered and again when this node layout is rendered, except if 'admin' 
  * is true.
  */
-function panels_node_preprocess_layout(&$variables) {
-  if ($variables['layout']->module == 'panels_node') {
+function layout_nodes_preprocess_layout(&$variables) {
+  if ($variables['layout']->module == 'layout_nodes') {
     $variables['admin'] = TRUE;
     $variables['content']['title'] = '';
   }
@@ -26,15 +26,15 @@ function panels_node_preprocess_layout(&$variables) {
 /**
  * Implements hook_permission().
  */
-function panels_node_permission() {
+function layout_nodes_permission() {
   return array(
-    'administer panel-nodes' => array(
-      'title' => t('Administer panel nodes'),
-      'description' => t('Full administrative access to panel nodes including create, update and delete all'),
+    'administer layout nodes' => array(
+      'title' => t('Administer layout nodes'),
+      'description' => t('Full administrative access to layout nodes including create, update and delete all'),
     ),
-    'create panel content' => array(
-      'title' => t('Create panel content'),
-      'description' => t('Create panel content.'),
+    'create layout node content' => array(
+      'title' => t('Create layout node content'),
+      'description' => t('Create layout node content.'),
     ),
   );
 }
@@ -42,44 +42,44 @@ function panels_node_permission() {
 /**
  * Implements hook_menu().
  */
-function panels_node_menu() {
-  $items['admin/structure/panels/settings/panel-node'] = array(
-    'title' => 'Panel nodes',
-    'description' => 'Configure which content is available to add to panel node displays.',
-    'access arguments' => array('administer panel-nodes'),
-    'page callback' => 'panels_node_settings',
+function layout_nodes_menu() {
+  $items['admin/structure/layout_nodes/settings/layout-node'] = array(
+    'title' => 'Layout nodes',
+    'description' => 'Configure which content is available to add to layout node displays.',
+    'access arguments' => array('administer layout nodes'),
+    'page callback' => 'layout_nodes_settings',
     'type' => MENU_LOCAL_TASK,
   );
 
   // Avoid some repetition on these:
   $base = array(
-    'access callback' => 'panels_node_edit_node',
+    'access callback' => 'layout_nodes_edit_node',
     'access arguments' => array(1),
     'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
   );
 
-  $items['node/%node/panel_layout'] = array(
-    'title' => 'Panel layout',
+  $items['node/%node/layout_node'] = array(
+    'title' => 'Node layout',
     'page callback' => 'backdrop_get_form',
-    'page arguments' => array('panels_node_edit_layout', 1),
+    'page arguments' => array('layout_nodes_edit_layout', 1),
     'weight' => 2,
     'type' => MENU_LOCAL_TASK,
-    'access callback' => 'panels_node_edit_node',
+    'access callback' => 'layout_nodes_edit_node',
     'access arguments' => array(1),
   );
 
-  $items['node/%node/panel_content'] = array(
-    'title' => 'Panel content',
-    'page callback' => 'panels_node_edit_content',
+  $items['node/%node/layout_node_content'] = array(
+    'title' => 'Node layout content',
+    'page callback' => 'layout_nodes_edit_content',
     'weight' => 3,
   ) + $base;
 
-  $items['node/add/panel/choose-layout'] = array(
+  $items['node/add/layout_node/choose-layout'] = array(
     'title' => 'Choose layout',
-    'access callback' => 'panels_add_panel_access_callback',
+    'access callback' => 'layout_nodes_add_layout_access_callback',
     'page callback' => 'backdrop_get_form',
-    'page arguments' => array('panels_node_edit_layout'),
+    'page arguments' => array('layout_nodes_edit_layout'),
     'type' => MENU_CALLBACK,
   );
 
@@ -89,8 +89,8 @@ function panels_node_menu() {
 /**
  * Access callback to determine if a user has edit access.
  */
-function panels_node_edit_node($node) {
-  if (!isset($node->panels_node)) {
+function layout_nodes_edit_node($node) {
+  if (!isset($node->layout_nodes)) {
     return FALSE;
   }
 
@@ -98,15 +98,15 @@ function panels_node_edit_node($node) {
 }
 
 /**
- * Access callback to determine if user has access to add panel nodes.
+ * Access callback to determine if user has access to add layout nodes.
  */
-function panels_add_panel_access_callback() {
-  return user_access('create panel content') || user_access('administer panel-nodes');
+function layout_nodes_add_layout_access_callback() {
+  return user_access('create layout node content') || user_access('administer layout nodes');
 }
 
-function panels_node_admin_paths_alter(&$paths) {
-  $paths['node/*/panel_layout'] = TRUE;
-  $paths['node/*/panel_content'] = TRUE;
+function layout_nodes_admin_paths_alter(&$paths) {
+  $paths['node/*/layout_node'] = TRUE;
+  $paths['node/*/layout_node_content'] = TRUE;
 }
 
 // ---------------------------------------------------------------------------
@@ -114,16 +114,16 @@ function panels_node_admin_paths_alter(&$paths) {
 /**
  * Implements hook_access().
  */
-function panels_node_node_access($node, $op, $account) {
-  if ($op == 'create' && $node != 'panel') {
+function layout_nodes_node_access($node, $op, $account) {
+  if ($op == 'create' && $node != 'layout_node') {
     return NODE_ACCESS_IGNORE;
   }
 
-  if (is_object($node) && $node->type != 'panel') {
+  if (is_object($node) && $node->type != 'layout_node') {
     return NODE_ACCESS_IGNORE;
   }
 
-  if (user_access('administer panel-nodes', $account)) {
+  if (user_access('administer layout nodes', $account)) {
     return NODE_ACCESS_ALLOW;
   }
 }
@@ -131,21 +131,21 @@ function panels_node_node_access($node, $op, $account) {
 /**
  * Implements hook_form().
  */
-function panels_node_hook_form(&$node, &$form_state) {
-  $form['panels_node']['#tree'] = TRUE;
+function layout_nodes_hook_form(&$node, &$form_state) {
+  $form['layout_nodes']['#tree'] = TRUE;
   if (empty($node->nid) && arg(0) == 'node' && arg(1) == 'add') {
     // Grab our selected layout from the $node, If it doesn't exist, try arg(3)
     // and if that doesn't work present them with a list to pick from.
-    $layout_template = isset($node->panel_layout) ? $node->panel_layout : arg(3);
+    $layout_template = isset($node->layout_node) ? $node->layout_node : arg(3);
     if (empty($layout_template)) {
-      backdrop_goto('node/add/panel/choose-layout', array('query' => backdrop_get_query_parameters()));
+      backdrop_goto('node/add/layout_node/choose-layout', array('query' => backdrop_get_query_parameters()));
     }
 
     $layout_template_info = layout_get_layout_template_info($layout_template);
     if (empty($layout_template_info)) {
       return MENU_NOT_FOUND;
     }
-    $form['panels_node']['layout'] = array(
+    $form['layout_nodes']['layout_template'] = array(
       '#type' => 'value',
       '#value' => $layout_template,
     );
@@ -166,37 +166,31 @@ function panels_node_hook_form(&$node, &$form_state) {
 /**
  * Implements hook_validate().
  */
-function panels_node_hook_validate($node, $form, &$form_state) {
-  if (!$node->nid && empty($node->panels_node['layout_template'])) {
-    form_error($form['panels_node']['layout'], t('Please select a layout.'));
+function layout_nodes_hook_validate($node, $form, &$form_state) {
+  if (!$node->nid && empty($node->layout_nodes['layout_template'])) {
+    form_error($form['layout_nodes']['layout'], t('Please select a layout.'));
   }
 }
 
 /**
  * Implements hook_load().
- *
- * Panels does not use revisions for nodes because that would open us up
- * to have completely separate displays, and we'd have to copy them,
- * and that's going to be a LOT of data.
  */
-function panels_node_hook_load($nodes) {
-  // We shortcut this because only in some really drastic corruption circumstance will this
-  // not work.
-  $result = db_query("SELECT * FROM {panels_node} WHERE nid IN (:nids)", array(':nids' => array_keys($nodes)));
+function layout_nodes_hook_load($nodes) {
+  $result = db_query("SELECT * FROM {layout_nodes} WHERE nid IN (:nids)", array(':nids' => array_keys($nodes)));
   foreach ($result as $record) {
-    $nodes[$record->nid]->panels_node = (array) $record;
+    $nodes[$record->nid]->layout_nodes = (array) $record;
   }
 }
 
 /**
  * Implements hook_insert().
  */
-function panels_node_hook_insert(&$node) {
-  db_insert('panels_node')
+function layout_nodes_hook_insert(&$node) {
+  db_insert('layout_nodes')
     ->fields(array(
     'nid' => $node->nid,
-    'module' => 'panels_node', // todo remove module
-    'layout_template' => $node->panels_node['layout_template'],
+    'module' => 'layout_nodes',
+    'layout_template' => $node->layout_nodes['layout_template'],
     'settings' => serialize(array(
       'title' => '',
       'title_display' => LAYOUT_TITLE_DEFAULT,
@@ -209,15 +203,15 @@ function panels_node_hook_insert(&$node) {
 /**
  * Implements hook_delete().
  */
-function panels_node_hook_delete(&$node) {
-  db_delete('panels_node')->condition('nid', $node->nid)->execute();
-  db_delete('panel_blocks')->condition('nid', $node->nid)->execute();
+function layout_nodes_hook_delete(&$node) {
+  db_delete('layout_nodes')->condition('nid', $node->nid)->execute();
+  db_delete('layout_node_blocks')->condition('nid', $node->nid)->execute();
 }
 
 /**
  * Implements hook_view().
  */
-function panels_node_hook_view($node, $view_mode) {
+function layout_nodes_hook_view($node, $view_mode) {
   static $rendering = array();
 
   // Prevent loops if someone foolishly puts the node inside itself:
@@ -233,11 +227,11 @@ function panels_node_hook_view($node, $view_mode) {
     $node->readmore = TRUE;
   }
   else {
-    if (!empty($node->panels_node['nid'])) {
-      $display = panels_node_layout_load($node);
+    if (!empty($node->layout_nodes['nid'])) {
+      $display = layout_nodes_layout_load($node);
 
       // This lets us know if a template is being used by the page or the node.
-      $display->settings['panels_node'] = TRUE;
+      $display->settings['layout_nodes'] = TRUE;
       $renderer = layout_create_renderer('standard', $display);
       $node->content['body'] = array(
         '#markup' => $renderer->render(),
@@ -253,24 +247,22 @@ function panels_node_hook_view($node, $view_mode) {
 // ---------------------------------------------------------------------------
 // Administrative pages.
 /**
- * Settings for panel nodes.
+ * Settings for layout nodes.
  */
-function panels_node_settings() {
+function layout_nodes_settings() {
   return array();
 }
 
-// ---------------------------------------------------------------------------
-// Meat of the Panels API; almost completely passing through to panels.module.
 /**
- * Pass through to the panels layout editor.
+ * Pass through to the layout editor.
  */
-function panels_node_edit_layout($form, &$form_state, $node = NULL) {
+function layout_nodes_edit_layout($form, &$form_state, $node = NULL) {
   $form['#attached']['js'][] = backdrop_get_path('module', 'layout') . '/js/layout.admin.js';
   $form['#attached']['css'][] = backdrop_get_path('module', 'layout') . '/css/layout.admin.css';
 
   $default_template = '';
   if ($node) {
-    $layout = panels_node_layout_load($node);
+    $layout = layout_nodes_layout_load($node);
     $default_template = $layout->layout_template;
     $layout->node = $node;
     $form_state['layout'] = $layout;
@@ -300,7 +292,7 @@ function panels_node_edit_layout($form, &$form_state, $node = NULL) {
     '#type' => 'submit',
     '#value' => t('Save layout'),
     '#submit' => array(
-      'panels_node_edit_layout_submit',
+      'layout_nodes_edit_layout_submit',
     ),
   );
 
@@ -308,12 +300,12 @@ function panels_node_edit_layout($form, &$form_state, $node = NULL) {
 }
 
 /**
- * Pass through to the panels content editor.
+ * Pass through to the layouts content editor.
  */
-function panels_node_edit_layout_submit($form, &$form_state) {
+function layout_nodes_edit_layout_submit($form, &$form_state) {
   // If a layout isnt set yet, this should be a new node being added.
   if (!isset($form_state['layout'])) {
-    backdrop_goto('node/add/panel/' . $form_state['values']['layout_template']);
+    backdrop_goto('node/add/layout-node/' . $form_state['values']['layout_template']);
   }
   else {
     $layout = $form_state['layout'];
@@ -322,12 +314,12 @@ function panels_node_edit_layout_submit($form, &$form_state) {
       foreach ($layout->positions as $region_id => $uuids) {
         foreach ($uuids as $block_index => $uuid) {
           if (isset($layout->content[$uuid])) {
-            panels_node_save_block($layout, $region_id, $uuid, $block_index);
+            layout_nodes_save_block($layout, $region_id, $uuid, $block_index);
           }
         }
       }
     }
-    db_update('panels_node')
+    db_update('layout_nodes')
       ->fields(array(
         'layout_template' => $form_state['values']['layout_template'],
       ))
@@ -335,18 +327,18 @@ function panels_node_edit_layout_submit($form, &$form_state) {
       ->execute();
     backdrop_set_message(t('Layout saved.'));
   }
-  layout_clear_layout_tempstore('panel-node-' . $layout->node->nid);
+  layout_clear_layout_tempstore('layout-node-' . $layout->node->nid);
 }
 
 /**
- * Pass through to the panels content editor.
+ * Pass through to the layouts content editor.
  */
-function panels_node_edit_content($node) {
+function layout_nodes_edit_content($node) {
   // Load from database to tempstore as Layout pulls from tempstore to build
   // the content form and blocks etc.
-  if (!$display = layout_tempstore_load('panel-node-' . $node->nid)) {
-    $display = panels_node_layout_load($node);
-    $display->name = 'panel-node-' . $node->nid;
+  if (!$display = layout_tempstore_load('layout-node-' . $node->nid)) {
+    $display = layout_nodes_layout_load($node);
+    $display->name = 'layout-node-' . $node->nid;
 
     // Don't use layout_set_layout_tempstore(). It locks the layout.
     tempstore_set('layout.layout', $display->name, $display, 604800);
@@ -360,14 +352,14 @@ function panels_node_edit_content($node) {
   return backdrop_get_form('layout_content_form', $display);
 }
 
-function panels_node_form_layout_content_form_alter(&$form, &$form_state, $form_id) {
-  if ($form['#layout']->module == 'panels_node') {
-    $form['actions']['submit']['#submit'] = array('panels_node_layout_content_form_submit');
+function layout_nodes_form_layout_content_form_alter(&$form, &$form_state, $form_id) {
+  if ($form['#layout']->module == 'layout_nodes') {
+    $form['actions']['submit']['#submit'] = array('layout_nodes_layout_content_form_submit');
     $form['actions']['cancel']['#access'] = FALSE;
   }
 }
 
-function panels_node_layout_content_form_submit(&$form, &$form_state) {
+function layout_nodes_layout_content_form_submit(&$form, &$form_state) {
   $layout = $form_state['layout'];
   // Update the block positions based on the hidden position elements.
   if (!empty($form_state['values']['content']['positions'])) {
@@ -376,17 +368,17 @@ function panels_node_layout_content_form_submit(&$form, &$form_state) {
         $uuids = array_filter(explode(',', $blocks));
         foreach ($uuids as $block_index => $uuid) {
           if (isset($layout->content[$uuid])) {
-            panels_node_save_block($layout, $region_id, $uuid, $block_index);
+            layout_nodes_save_block($layout, $region_id, $uuid, $block_index);
           }
         }
       }
     }
   }
 
-  layout_clear_layout_tempstore('panel-node-' . $layout->node->nid);
+  layout_clear_layout_tempstore('layout-node-' . $layout->node->nid);
 }
 
-function panels_node_save_block($layout, $region_id, $uuid, $block_index) {
+function layout_nodes_save_block($layout, $region_id, $uuid, $block_index) {
   $block = $layout->content[$uuid];
 
   $data = array(
@@ -396,23 +388,24 @@ function panels_node_save_block($layout, $region_id, $uuid, $block_index) {
     'block_index' => $block_index,
     'block_data' => $block,
     );
-  $exists = db_query('SELECT count(uuid) FROM {panel_blocks} WHERE uuid = :uuid', array(':uuid' => $uuid))->fetchField();
+  $exists = db_query('SELECT count(uuid) FROM {layout_node_blocks} WHERE uuid = :uuid', array(':uuid' => $uuid))->fetchField();
   if ($exists) {
-    backdrop_write_record('panel_blocks', $data, 'uuid');
+    backdrop_write_record('layout_node_blocks', $data, 'uuid');
   }
   else {
-    backdrop_write_record('panel_blocks', $data);
+    backdrop_write_record('layout_node_blocks', $data);
   }
 }
 
-function panels_node_layout_load($node) {
+function layout_nodes_layout_load($node) {
   // @todo join instead of two queries?
-  $result = db_query("SELECT * FROM {panels_node} WHERE nid = :nid", array(':nid' => $node->nid))->fetchObject();
-  $blocks = db_query("SELECT * FROM {panel_blocks} WHERE nid = :nid", array(':nid' => $node->nid));
+  // @todo cache this?
+  $result = db_query("SELECT * FROM {layout_nodes} WHERE nid = :nid", array(':nid' => $node->nid))->fetchObject();
+  $blocks = db_query("SELECT * FROM {layout_node_blocks} WHERE nid = :nid", array(':nid' => $node->nid));
   $config = array();
   // Create a new display and record that.
   $layout = new Layout($config);
-  $layout->title = $result->title;
+  $layout->title = $node->title;
   $layout->module = $result->module;
   $layout->layout_template = $result->layout_template;
   $layout->settings = unserialize($result->settings);
