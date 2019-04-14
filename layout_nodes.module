@@ -47,7 +47,8 @@ function layout_nodes_menu() {
     'title' => 'Layout nodes',
     'description' => 'Configure which content is available to add to layout node displays.',
     'access arguments' => array('administer layout nodes'),
-    'page callback' => 'layout_nodes_settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('layout_nodes_settings'),
     'type' => MENU_LOCAL_TASK,
   );
 
@@ -75,15 +76,27 @@ function layout_nodes_menu() {
     'weight' => 3,
   ) + $base;
 
-  $items['node/add/layout_node/choose-layout'] = array(
-    'title' => 'Choose layout',
-    'access callback' => 'layout_nodes_add_layout_access_callback',
-    'page callback' => 'backdrop_get_form',
-    'page arguments' => array('layout_nodes_edit_layout'),
-    'type' => MENU_CALLBACK,
-  );
+  $node_types = array_keys(node_type_get_types());
+  foreach ($node_types as $node_type) {
+    $items['node/add/' . $node_type . '/choose-layout'] = array(
+      'title' => 'Choose layout',
+      'access callback' => 'layout_nodes_add_layout_access_callback',
+      'page callback' => 'backdrop_get_form',
+      'page arguments' => array('layout_nodes_edit_layout', NULL, $node_type),
+      'type' => MENU_CALLBACK,
+    );
+  }
 
   return $items;
+}
+
+/**
+ * Callback to determine if layout nodes is enabled on a node type.
+ */
+function layout_nodes_enabled_type($type) {
+  $allowed_types = config_get('layout_nodes.settings', 'layout_node_types');
+
+  return in_array($type, $allowed_types);
 }
 
 /**
@@ -115,7 +128,8 @@ function layout_nodes_admin_paths_alter(&$paths) {
  * Implements hook_access().
  */
 function layout_nodes_node_access($node, $op, $account) {
-  if ($op == 'create' && $node != 'layout_node') {
+  $allowed_types = config_get('layout_nodes.settings', 'layout_node_types');
+  if ($op == 'create' && !in_array($node, $allowed_types)) {
     return NODE_ACCESS_IGNORE;
   }
 
@@ -131,14 +145,18 @@ function layout_nodes_node_access($node, $op, $account) {
 /**
  * Implements hook_form().
  */
-function layout_nodes_hook_form(&$node, &$form_state) {
+function layout_nodes_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $node = $form_state['node'];
+  $type = node_type_get_type($node);
   $form['layout_nodes']['#tree'] = TRUE;
-  if (empty($node->nid) && arg(0) == 'node' && arg(1) == 'add') {
+  $allowed_types = array_filter(config_get('layout_nodes.settings', 'layout_node_types'));
+
+  if (empty($node->nid) && arg(0) == 'node' && arg(1) == 'add' && in_array($type->type, $allowed_types)) {
     // Grab our selected layout from the $node, If it doesn't exist, try arg(3)
     // and if that doesn't work present them with a list to pick from.
     $layout_template = isset($node->layout_node) ? $node->layout_node : arg(3);
     if (empty($layout_template)) {
-      backdrop_goto('node/add/layout_node/choose-layout', array('query' => backdrop_get_query_parameters()));
+      backdrop_goto('node/add/' . $type->type . '/choose-layout', array('query' => backdrop_get_query_parameters()));
     }
 
     $layout_template_info = layout_get_layout_template_info($layout_template);
@@ -151,8 +169,6 @@ function layout_nodes_hook_form(&$node, &$form_state) {
     );
   }
 
-  $type = node_type_get_type($node);
-
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
@@ -160,22 +176,24 @@ function layout_nodes_hook_form(&$node, &$form_state) {
     '#default_value' => $node->title,
   );
 
-  return $form;
+  //return $form;
 }
 
 /**
  * Implements hook_validate().
  */
 function layout_nodes_hook_validate($node, $form, &$form_state) {
-  if (!$node->nid && empty($node->layout_nodes['layout_template'])) {
-    form_error($form['layout_nodes']['layout'], t('Please select a layout.'));
+  if (layout_nodes_enabled_type($node->type)) {
+    if (!$node->nid && empty($node->layout_nodes['layout_template'])) {
+      form_error($form['layout_nodes']['layout'], t('Please select a layout.'));
+    }
   }
 }
 
 /**
  * Implements hook_load().
  */
-function layout_nodes_hook_load($nodes) {
+function layout_nodes_node_load($nodes, $types) {
   $result = db_query("SELECT * FROM {layout_nodes} WHERE nid IN (:nids)", array(':nids' => array_keys($nodes)));
   foreach ($result as $record) {
     $nodes[$record->nid]->layout_nodes = (array) $record;
@@ -185,25 +203,27 @@ function layout_nodes_hook_load($nodes) {
 /**
  * Implements hook_insert().
  */
-function layout_nodes_hook_insert(&$node) {
-  db_insert('layout_nodes')
-    ->fields(array(
-    'nid' => $node->nid,
-    'module' => 'layout_nodes',
-    'layout_template' => $node->layout_nodes['layout_template'],
-    'settings' => serialize(array(
-      'title' => '',
-      'title_display' => LAYOUT_TITLE_DEFAULT,
-      'title_block' => NULL,
+function layout_nodes_node_insert($node) {
+  if (layout_nodes_enabled_type($node->type)) {
+    db_insert('layout_nodes')
+      ->fields(array(
+      'nid' => $node->nid,
+      'module' => 'layout_nodes',
+      'layout_template' => $node->layout_nodes['layout_template'],
+      'settings' => serialize(array(
+        'title' => '',
+        'title_display' => LAYOUT_TITLE_DEFAULT,
+        'title_block' => NULL,
+      ))
     ))
-  ))
-    ->execute();
+      ->execute();
+  }
 }
 
 /**
  * Implements hook_delete().
  */
-function layout_nodes_hook_delete(&$node) {
+function layout_nodes_node_delete($node) {
   db_delete('layout_nodes')->condition('nid', $node->nid)->execute();
   db_delete('layout_node_blocks')->condition('nid', $node->nid)->execute();
 }
@@ -211,37 +231,39 @@ function layout_nodes_hook_delete(&$node) {
 /**
  * Implements hook_view().
  */
-function layout_nodes_hook_view($node, $view_mode) {
-  static $rendering = array();
+function layout_nodes_node_view(Node $node, $view_mode, $langcode) {
+  if (layout_nodes_enabled_type($node->type)) {
+    static $rendering = array();
 
-  // Prevent loops if someone foolishly puts the node inside itself:
-  if (!empty($rendering[$node->nid])) {
-    return $node;
-  }
-
-  $rendering[$node->nid] = TRUE;
-
-  if ($view_mode == 'teaser') {
-    // Because our teasier is never the same as our content, *always* provide
-    // the read more flag.
-    $node->readmore = TRUE;
-  }
-  else {
-    if (!empty($node->layout_nodes['nid'])) {
-      $display = layout_nodes_layout_load($node);
-
-      // This lets us know if a template is being used by the page or the node.
-      $display->settings['layout_nodes'] = TRUE;
-      $renderer = layout_create_renderer('standard', $display);
-      $node->content['body'] = array(
-        '#markup' => $renderer->render(),
-        '#weight' => 0,
-      );
+    // Prevent loops if someone foolishly puts the node inside itself:
+    if (!empty($rendering[$node->nid])) {
+      return $node;
     }
-  }
 
-  unset($rendering[$node->nid]);
-  return $node;
+    $rendering[$node->nid] = TRUE;
+
+    if ($view_mode == 'teaser') {
+      // Because our teasier is never the same as our content, *always* provide
+      // the read more flag.
+      $node->readmore = TRUE;
+    }
+    else {
+      if (!empty($node->layout_nodes['nid'])) {
+        $display = layout_nodes_layout_load($node);
+
+        // This lets us know if a template is being used by the page or the node.
+        $display->settings['layout_nodes'] = TRUE;
+        $renderer = layout_create_renderer('standard', $display);
+        $node->content['body'] = array(
+          '#markup' => $renderer->render(),
+          '#weight' => 0,
+        );
+      }
+    }
+
+    unset($rendering[$node->nid]);
+    // return $node;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -249,14 +271,26 @@ function layout_nodes_hook_view($node, $view_mode) {
 /**
  * Settings for layout nodes.
  */
-function layout_nodes_settings() {
-  return array();
+function layout_nodes_settings($form, &$form_state) {
+  $form['#config'] = 'layout_nodes.settings';
+  $node_types = node_type_get_types();
+  $options = node_type_get_names();
+
+  $form['layout_node_types'] = array(
+    '#title' => t('Layout node enabled content types'),
+    '#type' => 'checkboxes',
+    '#default_value' => config_get('layout_nodes.settings', 'layout_node_types'),
+    '#options' => $options,
+    '#description' => t('Layouts will be enable for selected node types.**'),
+  );
+
+  return system_settings_form($form);
 }
 
 /**
  * Pass through to the layout editor.
  */
-function layout_nodes_edit_layout($form, &$form_state, $node = NULL) {
+function layout_nodes_edit_layout($form, &$form_state, $node = NULL, $type = '') {
   $form['#attached']['js'][] = backdrop_get_path('module', 'layout') . '/js/layout.admin.js';
   $form['#attached']['css'][] = backdrop_get_path('module', 'layout') . '/css/layout.admin.css';
 
@@ -266,9 +300,11 @@ function layout_nodes_edit_layout($form, &$form_state, $node = NULL) {
     $default_template = $layout->layout_template;
     $layout->node = $node;
     $form_state['layout'] = $layout;
+    $type = $node->type;
   }
 
   $form['#attributes'] = array('class' => array('layout-settings-form'));
+  $form_state['type'] = $type;
 
   $form['layout_template'] = array(
     '#title' => t('Layout template'),
@@ -305,7 +341,7 @@ function layout_nodes_edit_layout($form, &$form_state, $node = NULL) {
 function layout_nodes_edit_layout_submit($form, &$form_state) {
   // If a layout isnt set yet, this should be a new node being added.
   if (!isset($form_state['layout'])) {
-    backdrop_goto('node/add/layout-node/' . $form_state['values']['layout_template']);
+    backdrop_goto('node/add/' . $form_state['type'] . '/' . $form_state['values']['layout_template']);
   }
   else {
     $layout = $form_state['layout'];
@@ -430,3 +466,12 @@ function layout_nodes_layout_load($node) {
   return $layout;
 }
 
+/**
+ * Implements hook_config_info().
+ */
+function layout_nodes_config_info() {
+  $prefixes['layout_nodes.settings'] = array(
+    'label' => t('Layout nodes settings'),
+    'group' => t('Configuration'),
+  );
+}
