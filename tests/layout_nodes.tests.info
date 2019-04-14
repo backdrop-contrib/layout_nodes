@@ -1,0 +1,5 @@
+[LayoutNodesTest]
+name = Test Layout Nodes
+description = Test layout node functionality.
+group = Layout node
+file = layout_nodes.test
