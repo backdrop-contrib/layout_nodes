@@ -1,6 +1,8 @@
 name = Layout nodes
 description = Create nodes that are divided into areas with selectable content.
-tags[] = layouts
-dependencies[] = layout
 backdrop = 1.x
 type = module
+configure = admin/structure/layout_nodes/settings/layout-node
+
+tags[] = layouts
+dependencies[] = layout
