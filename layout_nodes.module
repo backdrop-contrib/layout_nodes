@@ -11,9 +11,9 @@
 // General Backdrop hooks.
 
 /**
- * layout_preprocess_layout() adds all these page components to templates 
- * whether you want them or not, meaning they show up twice: once when the page 
- * is rendered and again when this node layout is rendered, except if 'admin' 
+ * layout_preprocess_layout() adds all these page components to templates
+ * whether you want them or not, meaning they show up twice: once when the page
+ * is rendered and again when this node layout is rendered, except if 'admin'
  * is true.
  */
 function layout_nodes_preprocess_layout(&$variables) {
@@ -46,10 +46,9 @@ function layout_nodes_menu() {
   $items['admin/structure/layout_nodes/settings/layout-node'] = array(
     'title' => 'Layout nodes',
     'description' => 'Configure which content is available to add to layout node displays.',
-    'access arguments' => array('administer layout nodes'),
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('layout_nodes_settings'),
-    'type' => MENU_LOCAL_TASK,
+    'access arguments' => array('administer layout nodes'),
   );
 
   // Avoid some repetition on these:
@@ -273,17 +272,15 @@ function layout_nodes_node_view(Node $node, $view_mode, $langcode) {
  */
 function layout_nodes_settings($form, &$form_state) {
   $form['#config'] = 'layout_nodes.settings';
-  $node_types = node_type_get_types();
+  $default = config_get('layout_nodes.settings', 'layout_node_types');
   $options = node_type_get_names();
-
   $form['layout_node_types'] = array(
     '#title' => t('Layout node enabled content types'),
     '#type' => 'checkboxes',
-    '#default_value' => config_get('layout_nodes.settings', 'layout_node_types'),
+    '#default_value' => (!empty($default) ? $default : array()),
     '#options' => $options,
-    '#description' => t('Layouts will be enable for selected node types.**'),
+    '#description' => t('Layouts will be enabled for selected node types.'),
   );
-
   return system_settings_form($form);
 }
 
